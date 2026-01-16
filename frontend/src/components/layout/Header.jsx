@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, LogIn } from "lucide-react";
+import { Menu, X, User as UserIcon, LogIn, LogOut, LayoutDashboard } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { useAuth } from "../../utils/AuthContext";
 
 import ThemeToggle from "../ui/ThemeToggle";
 
@@ -18,6 +19,8 @@ const navLinks = [
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +29,12 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const getDashboardLink = () => {
+    if (user.roles.includes('ROLE_ADMIN')) return '/admin/dashboard';
+    if (user.roles.includes('ROLE_STAFF')) return '/staff/dashboard';
+    return null;
+  };
 
   return (
     <nav
@@ -84,23 +93,61 @@ const Header = () => {
         <div className="hidden lg:flex items-center space-x-4">
           <ThemeToggle />
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center space-x-2 px-4 py-2 text-luxury-charcoal/90 dark:text-white/90 hover:text-luxury-charcoal dark:hover:text-white transition-colors text-sm font-sans tracking-widest uppercase"
-          >
-            <LogIn size={18} className="text-luxury-gold" />
-            <span>Login</span>
-          </motion.button>
+          {user ? (
+            <div className="flex items-center space-x-4">
+              {getDashboardLink() && (
+                <Link to={getDashboardLink()}>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center space-x-2 px-4 py-2 text-luxury-gold hover:text-yellow-600 transition-colors text-sm font-sans tracking-widest uppercase"
+                  >
+                    <LayoutDashboard size={18} />
+                    <span>Dashboard</span>
+                  </motion.button>
+                </Link>
+              )}
+              
+              <div className="flex items-center space-x-3 pl-4 border-l border-black/10 dark:border-white/10">
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${user.username}&background=D4AF37&color=fff`} 
+                  className="w-8 h-8 rounded-full border border-luxury-gold" 
+                  alt="Avatar" 
+                />
+                <button 
+                  onClick={logout}
+                  className="text-luxury-charcoal/60 dark:text-white/60 hover:text-red-500 transition-colors"
+                  title="Logout"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Link to="/login">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-2 px-4 py-2 text-luxury-charcoal/90 dark:text-white/90 hover:text-luxury-charcoal dark:hover:text-white transition-colors text-sm font-sans tracking-widest uppercase"
+                >
+                  <LogIn size={18} className="text-luxury-gold" />
+                  <span>Login</span>
+                </motion.button>
+              </Link>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-2.5 bg-luxury-gold hover:bg-yellow-600 text-white font-sans font-bold text-xs tracking-[0.2em] uppercase rounded-sm transition-all shadow-lg overflow-hidden relative group"
-          >
-            <span className="relative z-10 text-white">Sign Up</span>
-            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 opacity-20"></div>
-          </motion.button>
+              <Link to="/register">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2.5 bg-luxury-gold hover:bg-yellow-600 text-white font-sans font-bold text-xs tracking-[0.2em] uppercase rounded-sm transition-all shadow-lg overflow-hidden relative group"
+                >
+                  <span className="relative z-10 text-white">Sign Up</span>
+                  <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 opacity-20"></div>
+                </motion.button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -135,16 +182,53 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+              
               <div className="flex flex-col pt-6 space-y-4 border-t border-black/5 dark:border-white/5">
-                <button className="flex items-center space-x-4 text-luxury-charcoal/80 dark:text-white/80 hover:text-luxury-charcoal dark:hover:text-white transition-colors">
-                  <LogIn size={20} className="text-luxury-gold" />
-                  <span className="uppercase tracking-widest text-sm font-sans">
-                    Login
-                  </span>
-                </button>
-                <button className="w-full py-4 bg-luxury-gold text-white font-bold uppercase tracking-widest text-sm rounded-sm">
-                  Sign Up
-                </button>
+                {user ? (
+                  <>
+                    <div className="flex items-center space-x-4 p-2">
+                       <img 
+                        src={`https://ui-avatars.com/api/?name=${user.username}&background=D4AF37&color=fff`} 
+                        className="w-10 h-10 rounded-full border border-luxury-gold" 
+                        alt="Avatar" 
+                      />
+                      <span className="text-luxury-charcoal dark:text-white font-bold">{user.username}</span>
+                    </div>
+                    {getDashboardLink() && (
+                      <Link 
+                        to={getDashboardLink()}
+                        className="w-full py-4 bg-luxury-gold/10 text-luxury-gold text-center font-bold uppercase tracking-widest text-sm rounded-sm"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    <button 
+                      onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                      className="w-full py-4 bg-red-500/10 text-red-500 font-bold uppercase tracking-widest text-sm rounded-sm"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      to="/login"
+                      className="flex items-center space-x-4 text-luxury-charcoal/80 dark:text-white/80 hover:text-luxury-charcoal dark:hover:text-white transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <LogIn size={20} className="text-luxury-gold" />
+                      <span className="uppercase tracking-widest text-sm font-sans">Login</span>
+                    </Link>
+                    <Link 
+                      to="/register"
+                      className="w-full py-4 bg-luxury-gold text-white text-center font-bold uppercase tracking-widest text-sm rounded-sm shadow-lg"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
