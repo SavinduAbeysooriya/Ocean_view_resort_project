@@ -5,11 +5,29 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-luxury-dark text-white font-sans antialiased;
+  :root {
+    --bg-color: #F9F8F4;
+    /* luxury-cream */
+    --text-color: #1A1A1A;
+    /* luxury-charcoal */
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  .dark {
+    --bg-color: #0A0A0A;
+    /* luxury-dark */
+    --text-color: #FFFFFF;
+  }
+
+  body {
+    @apply bg-luxury-cream text-luxury-charcoal dark:bg-luxury-dark dark:text-white font-sans antialiased transition-colors duration-300;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
