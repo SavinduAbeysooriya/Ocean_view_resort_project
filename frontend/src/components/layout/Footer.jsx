@@ -38,10 +38,16 @@ const Footer = () => {
         <div>
           <h4 className="text-luxury-charcoal dark:text-white font-serif font-bold text-lg mb-6 uppercase tracking-wider">Quick Links</h4>
           <ul className="space-y-4">
-            {['Home', 'Rooms & Suites', 'Dining', 'Wellness', 'Experiences'].map((item) => (
-              <li key={item}>
-                <a href="#" className="text-luxury-charcoal/50 dark:text-white/50 hover:text-luxury-gold transition-colors text-sm font-sans tracking-wide">
-                  {item}
+            {[
+              { name: 'Home', href: '/' },
+              { name: 'About Us', href: '/about' },
+              { name: 'Rooms', href: '/rooms' },
+              { name: 'FAQ', href: '/faq' },
+              { name: 'Contact', href: '/contact' }
+            ].map((item) => (
+              <li key={item.name}>
+                <a href={item.href} className="text-luxury-charcoal/50 dark:text-white/50 hover:text-luxury-gold transition-colors text-sm font-sans tracking-wide">
+                  {item.name}
                 </a>
               </li>
             ))}
