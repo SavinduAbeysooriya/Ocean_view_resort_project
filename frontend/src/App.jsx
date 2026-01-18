@@ -10,9 +10,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import About from './pages/About';
 import FAQ from './pages/FAQ';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import RoomCategories from './pages/admin/RoomCategories';
 import StaffDashboard from './pages/staff/StaffDashboard';
+import Profile from './pages/customer/Profile';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const GOOGLE_CLIENT_ID = "707866377438-20640dlhedfh63fu8iqot6n8394vp9mo.apps.googleusercontent.com";
@@ -31,6 +34,8 @@ const App = () => {
                         <Route path="/register" element={<Layout><Register /></Layout>} />
                         <Route path="/about" element={<Layout><About /></Layout>} />
                         <Route path="/faq" element={<Layout><FAQ /></Layout>} />
+                        <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
 
                         {/* Admin Routes */}
                         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
@@ -41,6 +46,11 @@ const App = () => {
                         {/* Staff Routes */}
                         <Route element={<ProtectedRoute allowedRoles={['ROLE_STAFF']} />}>
                             <Route path="/staff/dashboard" element={<StaffDashboard />} />
+                        </Route>
+
+                        {/* Customer Routes */}
+                        <Route element={<ProtectedRoute allowedRoles={['ROLE_CUSTOMER']} />}>
+                            <Route path="/profile" element={<Layout><Profile /></Layout>} />
                         </Route>
 
                         {/* Catch all */}

@@ -10,6 +10,8 @@ public class JwtResponse {
     private String email;
     private List<String> roles;
 
+    public JwtResponse() {}
+
     public JwtResponse(String accessToken, String id, String username, String email, List<String> roles) {
         this.token = accessToken;
         this.id = id;
@@ -18,7 +20,10 @@ public class JwtResponse {
         this.roles = roles;
     }
 
+    @com.fasterxml.jackson.annotation.JsonProperty("accessToken")
     public String getAccessToken() { return token; }
+
+    @com.fasterxml.jackson.annotation.JsonProperty("accessToken")
     public void setAccessToken(String accessToken) { this.token = accessToken; }
 
     public String getTokenType() { return type; }

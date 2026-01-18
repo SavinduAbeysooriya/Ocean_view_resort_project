@@ -36,10 +36,12 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     
     // Redirect based on role
-    if (userData.roles.includes('ROLE_ADMIN')) {
+    if (userData?.roles?.includes('ROLE_ADMIN')) {
       navigate('/admin/dashboard');
-    } else if (userData.roles.includes('ROLE_STAFF')) {
+    } else if (userData?.roles?.includes('ROLE_STAFF')) {
       navigate('/staff/dashboard');
+    } else if (userData?.roles?.includes('ROLE_CUSTOMER')) {
+      navigate('/profile');
     } else {
       navigate('/');
     }

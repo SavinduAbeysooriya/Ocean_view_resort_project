@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GuestRepository extends MongoRepository<Guest, String> {
+    java.util.Optional<Guest> findByUserId(String userId);
 }
