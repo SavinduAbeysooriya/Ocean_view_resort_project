@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, User, Loader2, UserPlus, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
+import { useAuth } from '../utils/AuthContext';
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -13,6 +15,7 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -48,6 +51,27 @@ const Register = () => {
       const errorMsg = typeof err.response?.data === 'string' 
         ? err.response.data 
         : err.response?.data?.message || 'Registration failed. Please try again.';
+      setStatus({ type: 'error', message: errorMsg });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setStatus({ type: '', message: '' });
+    try {
+      console.log('Attempting Google signup...');
+      const response = await axios.post("http://localhost:8080/api/auth/google", {
+        token: credentialResponse.credential,
+      });
+      console.log('Google signup response:', response.data);
+      login(response.data, response.data.accessToken);
+    } catch (err) {
+      console.error('Google signup error details:', err);
+      const errorMsg = typeof err.response?.data === 'string' && err.response.data.trim() !== ''
+        ? err.response.data 
+        : err.response?.data?.message || 'Google signup failed. Please try again.';
       setStatus({ type: 'error', message: errorMsg });
     } finally {
       setLoading(false);
@@ -161,6 +185,25 @@ const Register = () => {
               )}
             </button>
           </form>
+
+          <div className="mt-8 relative text-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-black/5 dark:border-white/5"></div>
+            </div>
+            <span className="relative z-10 bg-white dark:bg-[#151515] px-4 text-[10px] uppercase tracking-widest text-luxury-charcoal/40 dark:text-white/40">
+              Or join with
+            </span>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setStatus({ type: 'error', message: 'Google Sign up Failed' })}
+              useOneTap
+              theme="filled_black"
+              shape="square"
+            />
+          </div>
 
           <div className="mt-10 text-center border-t border-black/5 dark:border-white/5 pt-8">
             <p className="text-xs text-luxury-charcoal/50 dark:text-white/50 uppercase tracking-widest">

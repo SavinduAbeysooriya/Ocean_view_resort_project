@@ -31,8 +31,10 @@ const Header = () => {
   }, []);
 
   const getDashboardLink = () => {
-    if (user.roles.includes('ROLE_ADMIN')) return '/admin/dashboard';
-    if (user.roles.includes('ROLE_STAFF')) return '/staff/dashboard';
+    if (!user || !user.roles) return null;
+    if (user.roles.includes('ROLE_ADMIN')) return { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard };
+    if (user.roles.includes('ROLE_STAFF')) return { name: 'Dashboard', href: '/staff/dashboard', icon: LayoutDashboard };
+    if (user.roles.includes('ROLE_CUSTOMER')) return { name: 'Profile', href: '/profile', icon: UserIcon };
     return null;
   };
 
@@ -95,18 +97,22 @@ const Header = () => {
 
           {user ? (
             <div className="flex items-center space-x-4">
-              {getDashboardLink() && (
-                <Link to={getDashboardLink()}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center space-x-2 px-4 py-2 text-luxury-gold hover:text-yellow-600 transition-colors text-sm font-sans tracking-widest uppercase"
-                  >
-                    <LayoutDashboard size={18} />
-                    <span>Dashboard</span>
-                  </motion.button>
-                </Link>
-              )}
+              {(() => {
+                const dashLink = getDashboardLink();
+                if (!dashLink) return null;
+                return (
+                  <Link to={dashLink.href}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center space-x-2 px-4 py-2 text-luxury-gold hover:text-yellow-600 transition-colors text-sm font-sans tracking-widest uppercase"
+                    >
+                      {dashLink.icon && React.createElement(dashLink.icon, { size: 18 })}
+                      <span>{dashLink.name}</span>
+                    </motion.button>
+                  </Link>
+                );
+              })()}
               
               <div className="flex items-center space-x-3 pl-4 border-l border-black/10 dark:border-white/10">
                 <img 
@@ -194,15 +200,19 @@ const Header = () => {
                       />
                       <span className="text-luxury-charcoal dark:text-white font-bold">{user.username}</span>
                     </div>
-                    {getDashboardLink() && (
-                      <Link 
-                        to={getDashboardLink()}
-                        className="w-full py-4 bg-luxury-gold/10 text-luxury-gold text-center font-bold uppercase tracking-widest text-sm rounded-sm"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Dashboard
-                      </Link>
-                    )}
+                    {(() => {
+                      const dashLink = getDashboardLink();
+                      if (!dashLink) return null;
+                      return (
+                        <Link 
+                          to={dashLink.href}
+                          className="w-full py-4 bg-luxury-gold/10 text-luxury-gold text-center font-bold uppercase tracking-widest text-sm rounded-sm"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {dashLink.name}
+                        </Link>
+                      );
+                    })()}
                     <button 
                       onClick={() => { logout(); setIsMobileMenuOpen(false); }}
                       className="w-full py-4 bg-red-500/10 text-red-500 font-bold uppercase tracking-widest text-sm rounded-sm"
