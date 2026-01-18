@@ -23,23 +23,39 @@ const Login = () => {
     setError('');
 
     try {
+      console.log('Attempting login...', formData.email);
       const response = await axios.post('http://localhost:8080/api/auth/login', formData);
+      console.log('Login response:', response.data);
       login(response.data, response.data.accessToken);
     } catch (err) {
-      setError(err.response?.data || 'Login failed. Please check your credentials.');
+      console.error('Login error details:', err);
+      const errorMsg = typeof err.response?.data === 'string' && err.response.data.trim() !== ''
+        ? err.response.data 
+        : err.response?.data?.message || 'Login failed. Please check your connection or credentials.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setError('');
     try {
+      console.log('Attempting Google login...');
       const response = await axios.post('http://localhost:8080/api/auth/google', {
         token: credentialResponse.credential
       });
+      console.log('Google login response:', response.data);
       login(response.data, response.data.accessToken);
     } catch (err) {
-      setError('Google login failed. Please try again.');
+      console.error('Google login error details:', err);
+      const errorMsg = typeof err.response?.data === 'string' && err.response.data.trim() !== ''
+        ? err.response.data 
+        : err.response?.data?.message || 'Google login failed. Please try again.';
+      setError(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,6 +102,9 @@ const Login = () => {
                   className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 pl-10 pr-4 py-3 text-luxury-charcoal dark:text-white outline-none focus:border-luxury-gold transition-all"
                   placeholder="••••••••"
                 />
+              </div>
+              <div className="flex justify-end">
+                <Link to="/forgot-password" size="sm" className="text-[10px] text-luxury-gold uppercase tracking-widest font-bold hover:underline">Forgot Password?</Link>
               </div>
             </div>
 

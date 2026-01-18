@@ -19,6 +19,8 @@ public class User {
     private String password;
     private UserRole role;
     private AuthProvider provider;
+    private String resetToken;
+    private java.time.LocalDateTime resetTokenExpiry;
 
     @CreatedDate
     @Field("created_at")
@@ -53,4 +55,10 @@ public class User {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
+
+    public java.time.LocalDateTime getResetTokenExpiry() { return resetTokenExpiry; }
+    public void setResetTokenExpiry(java.time.LocalDateTime resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
 }
