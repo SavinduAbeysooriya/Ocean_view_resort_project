@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import About from './pages/About';
 import FAQ from './pages/FAQ';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import RoomCategories from './pages/admin/RoomCategories';
 import StaffDashboard from './pages/staff/StaffDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -34,6 +35,7 @@ const App = () => {
                         {/* Admin Routes */}
                         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
                             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                            <Route path="/admin/room-categories" element={<RoomCategories />} />
                         </Route>
 
                         {/* Staff Routes */}
