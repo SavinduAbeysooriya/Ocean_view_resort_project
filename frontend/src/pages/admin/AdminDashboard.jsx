@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../utils/AuthContext';
 import axios from 'axios';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 import { 
-  LayoutDashboard, Users, Hotel, Calendar, Settings, LogOut, 
-  Moon, Sun, TrendingUp, DollarSign, UserCheck, Bell, Search,
-  ArrowUpRight, Clock
+  Moon, Sun, DollarSign, UserCheck, Hotel, Calendar
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 
 const AdminDashboard = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [darkMode, setDarkMode] = useState(document.documentElement.classList.contains('dark'));
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,8 +52,6 @@ const AdminDashboard = () => {
         name: key,
         amount: data.revenueByMonth[key]
       }));
-      // Sort months if needed, for now just taking as is or sorting by simple logic if possible
-      // A robust sort would require parsing month names
       setRevenueData(revArray);
 
       // Process Booking Status Data
@@ -84,50 +79,11 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500 flex selection:bg-luxury-gold selection:text-white">
-      {/* Sidebar */}
-      <aside className="w-64 bg-luxury-dark text-white p-8 flex flex-col space-y-10 fixed h-full z-30 shadow-2xl">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45 group cursor-pointer hover:rotate-[225deg] transition-all duration-700">
-            <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-xl group-hover:rotate-[-225deg] transition-all duration-700">O</span>
-          </div>
-          <div>
-            <span className="font-serif font-bold tracking-[0.2em] text-sm uppercase block">Ocean View</span>
-            <span className="text-[8px] uppercase tracking-[0.4em] text-luxury-gold/60 font-bold">Admin Authority</span>
-          </div>
-        </div>
-
-        <nav className="flex-1 space-y-2">
-          {[
-            { icon: LayoutDashboard, label: 'Overview', path: '/admin/dashboard', active: true },
-            { icon: Users, label: 'Guests', path: '#' },
-            { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
-            { icon: Hotel, label: 'Rooms', path: '/admin/rooms' },
-            { icon: Calendar, label: 'Reservations', path: '/admin/reservations' },
-            { icon: Users, label: 'Users & Staff', path: '/admin/users' },
-            { icon: Settings, label: 'Settings', path: '#' }
-          ].map((item, idx) => (
-            <button 
-              key={idx} 
-              onClick={() => item.path !== '#' && navigate(item.path)}
-              className={`w-full flex items-center space-x-4 p-4 rounded-sm transition-all duration-300 group ${item.active ? 'bg-luxury-gold text-white shadow-lg shadow-luxury-gold/20' : 'hover:bg-white/5 text-white/40 hover:text-white'}`}
-            >
-              <item.icon size={18} className={`${item.active ? 'scale-110' : 'group-hover:translate-x-1'} transition-all`} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="pt-8 border-t border-white/5 space-y-4">
-          <button onClick={logout} className="w-full flex items-center space-x-4 p-4 text-red-400/60 hover:text-red-400 hover:bg-red-400/5 rounded-sm transition-all duration-300 group">
-            <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Terminate Session</span>
-          </button>
-        </div>
-      </aside>
+      <AdminSidebar />
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-12 min-h-screen">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 border-b border-black/5 dark:border-white/5 pb-10 gap-8">
+      <main className="flex-1 lg:ml-64 p-6 lg:p-12 min-h-screen pt-20 lg:pt-12">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 lg:mb-16 border-b border-black/5 dark:border-white/5 pb-6 lg:pb-10 gap-6 lg:gap-8">
           <div>
             <div className="flex items-center space-x-3 text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-4">
               <span className="w-8 h-[1px] bg-luxury-gold/30"></span>

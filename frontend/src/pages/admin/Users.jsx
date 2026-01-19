@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../utils/AuthContext';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 import { 
-  Users, Edit2, Trash2, Plus, X, Search, Shield, Mail, Lock, 
-  LayoutDashboard, Hotel, Calendar as CalIcon, Settings, LogOut, Moon, Sun, Monitor
+  Edit2, Trash2, Plus, X, Search, Moon, Sun
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 
 const AdminUsers = () => {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -127,50 +126,10 @@ const AdminUsers = () => {
 
     return (
         <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500 flex selection:bg-luxury-gold selection:text-white font-sans">
-            
-            {/* Sidebar (Duplicated for Consistency) */}
-            <aside className="w-64 bg-luxury-dark text-white p-8 flex flex-col space-y-10 fixed h-full z-30 shadow-2xl">
-                <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45 group cursor-pointer hover:rotate-[225deg] transition-all duration-700">
-                        <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-xl group-hover:rotate-[-225deg] transition-all duration-700">O</span>
-                    </div>
-                    <div>
-                        <span className="font-serif font-bold tracking-[0.2em] text-sm uppercase block">Ocean View</span>
-                        <span className="text-[8px] uppercase tracking-[0.4em] text-luxury-gold/60 font-bold">Admin Authority</span>
-                    </div>
-                </div>
-
-                <nav className="flex-1 space-y-2">
-                    {[
-                        { icon: LayoutDashboard, label: 'Overview', path: '/admin/dashboard' },
-                        { icon: Users, label: 'Guests', path: '#' },
-                        { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
-                        { icon: Hotel, label: 'Rooms', path: '/admin/rooms' },
-                        { icon: CalIcon, label: 'Reservations', path: '/admin/reservations' },
-                        { icon: Shield, label: 'Users & Staff', path: '/admin/users', active: true },
-                        { icon: Settings, label: 'Settings', path: '#' }
-                    ].map((item, idx) => (
-                        <button 
-                            key={idx} 
-                            onClick={() => item.path !== '#' && navigate(item.path)}
-                            className={`w-full flex items-center space-x-4 p-4 rounded-sm transition-all duration-300 group ${item.active ? 'bg-luxury-gold text-white shadow-lg shadow-luxury-gold/20' : 'hover:bg-white/5 text-white/40 hover:text-white'}`}
-                        >
-                            <item.icon size={18} className={`${item.active ? 'scale-110' : 'group-hover:translate-x-1'} transition-all`} />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
-                        </button>
-                    ))}
-                </nav>
-
-                <div className="pt-8 border-t border-white/5 space-y-4">
-                    <button onClick={logout} className="w-full flex items-center space-x-4 p-4 text-red-400/60 hover:text-red-400 hover:bg-red-400/5 rounded-sm transition-all duration-300 group">
-                        <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Terminate Session</span>
-                    </button>
-                </div>
-            </aside>
+            <AdminSidebar />
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-12 min-h-screen">
+            <main className="flex-1 lg:ml-64 p-6 lg:p-12 min-h-screen pt-20 lg:pt-12">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 border-b border-black/5 dark:border-white/5 pb-10 gap-8">
                      <div>
                         <div className="flex items-center space-x-3 text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-4">
