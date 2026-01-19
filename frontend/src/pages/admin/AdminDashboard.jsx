@@ -58,7 +58,8 @@ const AdminDashboard = () => {
             { icon: Users, label: 'Guests', path: '#' },
             { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
             { icon: Hotel, label: 'Rooms', path: '/admin/rooms' },
-            { icon: Calendar, label: 'Bookings', path: '#' },
+            { icon: Calendar, label: 'Reservations', path: '/admin/reservations' },
+            { icon: Users, label: 'Staff', path: '/admin/staff' },
             { icon: Settings, label: 'Settings', path: '#' }
           ].map((item, idx) => (
             <button 

@@ -45,4 +45,10 @@ public class GuestController {
         Guest updatedGuest = guestService.saveOrUpdateGuest(guestRequest);
         return ResponseEntity.ok(updatedGuest);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Guest> getGuestById(@PathVariable String id) {
+        return guestService.getGuestById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
