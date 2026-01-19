@@ -425,7 +425,7 @@ const AdminReservations = () => {
                         { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
                         { icon: Hotel, label: 'Rooms', path: '/admin/rooms' },
                         { icon: CalIcon, label: 'Reservations', path: '/admin/reservations', active: true },
-                        { icon: Users, label: 'Staff', path: '/admin/staff' },
+                        { icon: Users, label: 'Users & Staff', path: '/admin/users' },
                         { icon: Settings, label: 'Settings', path: '#' }
                     ].map((item, idx) => (
                         <button 
