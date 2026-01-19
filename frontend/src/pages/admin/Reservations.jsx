@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 import { useNavigate } from 'react-router-dom';
 
 const localizer = momentLocalizer(moment);
@@ -407,45 +408,7 @@ const AdminReservations = () => {
             </div>
             
             {/* Sidebar */}
-            <aside className="w-64 bg-luxury-dark text-white p-8 flex flex-col space-y-10 fixed h-full z-30 shadow-2xl no-print">
-                <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45 group cursor-pointer hover:rotate-[225deg] transition-all duration-700">
-                        <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-xl group-hover:rotate-[-225deg] transition-all duration-700">O</span>
-                    </div>
-                    <div>
-                        <span className="font-serif font-bold tracking-[0.2em] text-sm uppercase block">Ocean View</span>
-                        <span className="text-[8px] uppercase tracking-[0.4em] text-luxury-gold/60 font-bold">Admin Authority</span>
-                    </div>
-                </div>
-
-                <nav className="flex-1 space-y-2">
-                    {[
-                        { icon: LayoutDashboard, label: 'Overview', path: '/admin/dashboard' },
-                        { icon: Users, label: 'Guests', path: '#' },
-                        { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
-                        { icon: Hotel, label: 'Rooms', path: '/admin/rooms' },
-                        { icon: CalIcon, label: 'Reservations', path: '/admin/reservations', active: true },
-                        { icon: Users, label: 'Staff', path: '/admin/staff' },
-                        { icon: Settings, label: 'Settings', path: '#' }
-                    ].map((item, idx) => (
-                        <button 
-                            key={idx} 
-                            onClick={() => item.path !== '#' && navigate(item.path)}
-                            className={`w-full flex items-center space-x-4 p-4 rounded-sm transition-all duration-300 group ${item.active ? 'bg-luxury-gold text-white shadow-lg shadow-luxury-gold/20' : 'hover:bg-white/5 text-white/40 hover:text-white'}`}
-                        >
-                            <item.icon size={18} className={`${item.active ? 'scale-110' : 'group-hover:translate-x-1'} transition-all`} />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
-                        </button>
-                    ))}
-                </nav>
-
-                <div className="pt-8 border-t border-white/5 space-y-4">
-                    <button onClick={logout} className="w-full flex items-center space-x-4 p-4 text-red-400/60 hover:text-red-400 hover:bg-red-400/5 rounded-sm transition-all duration-300 group">
-                        <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Terminate Session</span>
-                    </button>
-                </div>
-            </aside>
+          <AdminSidebar activePage="dashboard" />
 
             {/* Main Content */}
             <main className="flex-1 ml-64 p-12 min-h-screen">

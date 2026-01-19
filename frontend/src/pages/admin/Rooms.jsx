@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../utils/AuthContext';
+
 import { 
   LayoutDashboard, Users, Hotel, Calendar, Settings, LogOut, 
   Plus, Edit2, Trash2, X, Search, ChevronRight, Eye, Check, AlertCircle, Info, Image as ImageIcon
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AdminSidebar from '../../components/admin/AdminSidebar';
 
 const AdminRooms = () => {
   const { user, logout } = useAuth();
@@ -196,42 +198,8 @@ const AdminRooms = () => {
   return (
     <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-300 flex selection:bg-luxury-gold selection:text-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-luxury-dark text-white p-8 flex flex-col space-y-10 fixed h-full z-20 shadow-2xl">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 border border-luxury-gold flex items-center justify-center transform rotate-45">
-            <span className="transform -rotate-45 text-luxury-gold font-serif font-bold">O</span>
-          </div>
-          <span className="font-serif font-bold tracking-widest text-sm uppercase">Admin Portal</span>
-        </div>
-
-        <nav className="flex-1 space-y-4">
-          {[
-            { icon: LayoutDashboard, label: 'Overview', path: '/admin/dashboard' },
-            { icon: Users, label: 'Guests', path: '#' },
-            { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
-            { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
-            { icon: Hotel, label: 'Rooms', path: '/admin/rooms', active: true },
-            { icon: Calendar, label: 'Reservations', path: '/admin/reservations' },
-            { icon: Calendar, label: 'Bookings', path: '#' },
-            { icon: Settings, label: 'Settings', path: '#' }
-          ].map((item, idx) => (
-            <button 
-              key={idx} 
-              onClick={() => item.path !== '#' && navigate(item.path)}
-              className={`w-full flex items-center space-x-4 p-3 rounded-sm transition-all ${item.active ? 'bg-luxury-gold text-white shadow-lg shadow-luxury-gold/20' : 'hover:bg-white/5 text-white/60'}`}
-            >
-              <item.icon size={20} />
-              <span className="text-sm font-bold uppercase tracking-widest">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <button onClick={logout} className="flex items-center space-x-4 p-3 text-red-400 hover:bg-red-500/10 rounded-sm transition-all mt-auto border-t border-white/5 pt-8">
-          <LogOut size={20} />
-          <span className="text-sm font-bold uppercase tracking-widest">Logout</span>
-        </button>
-      </aside>
-
+    
+ <AdminSidebar activePage="dashboard" />
       {/* Main Content */}
       <main className="flex-1 ml-64 p-12 min-h-screen">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-black/5 dark:border-white/5 pb-8 gap-6">
