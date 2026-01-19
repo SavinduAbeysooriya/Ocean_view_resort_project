@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import RoomCategories from './pages/admin/RoomCategories';
+import AdminRooms from './pages/admin/Rooms';
 import StaffDashboard from './pages/staff/StaffDashboard';
 import Profile from './pages/customer/Profile';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -41,6 +42,7 @@ const App = () => {
                         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
                             <Route path="/admin/dashboard" element={<AdminDashboard />} />
                             <Route path="/admin/room-categories" element={<RoomCategories />} />
+                            <Route path="/admin/rooms" element={<AdminRooms />} />
                         </Route>
 
                         {/* Staff Routes */}
