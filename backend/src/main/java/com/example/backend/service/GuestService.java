@@ -30,4 +30,7 @@ public class GuestService {
             return guestRepository.save(guest);
         }
     }
+    public Optional<Guest> getGuestById(String id) {
+        return guestRepository.findById(id);
+    }
 }
