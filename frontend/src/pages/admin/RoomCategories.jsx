@@ -5,8 +5,9 @@ import {
   LayoutDashboard, Users, Hotel, Calendar, Settings, LogOut, 
   Plus, Edit2, Trash2, X, Image as ImageIcon, Search, ChevronRight
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/admin/AdminSidebar';
+import AdminHeader from '../../components/admin/AdminHeader';
 import axios from 'axios';
 
 const RoomCategories = () => {
@@ -160,37 +161,32 @@ const RoomCategories = () => {
     <AdminSidebar activePage="dashboard" />
       {/* Main Content */}
       <main className="flex-1 ml-64 p-12 min-h-screen">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-black/5 dark:border-white/5 pb-8 gap-6">
-          <div>
-            <div className="flex items-center space-x-2 text-[10px] uppercase tracking-[0.3em] text-luxury-gold font-bold mb-3">
-              <Link to="/admin/dashboard" className="hover:text-luxury-gold/70 transition-colors">Admin</Link>
-              <ChevronRight size={10} className="text-luxury-charcoal/20 dark:text-white/20" />
-              <span>Room Categories</span>
-            </div>
-            <h1 className="text-4xl font-serif text-luxury-charcoal dark:text-white tracking-tight">Room Categories</h1>
-            <p className="text-luxury-charcoal/40 dark:text-white/40 text-sm mt-2">Manage your luxury suite categories and descriptions</p>
+        <AdminHeader 
+          subtitle="Category Management"
+          title="Room Categories"
+          description="Manage your luxury suite categories and descriptions"
+        />
+
+        {/* Action Toolbar */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-luxury-charcoal/30 dark:text-white/30" size={16} />
+            <input 
+              type="text" 
+              placeholder="Search categories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-3 bg-white dark:bg-luxury-charcoal/20 border border-black/10 dark:border-white/10 rounded-sm focus:outline-none focus:border-luxury-gold transition-all text-sm w-80"
+            />
           </div>
-          
-          <div className="flex items-center space-x-4 w-full md:w-auto">
-            <div className="relative flex-1 md:flex-none">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-luxury-charcoal/30 dark:text-white/30" size={16} />
-              <input 
-                type="text" 
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2.5 bg-white dark:bg-luxury-charcoal/20 border border-black/10 dark:border-white/10 rounded-sm focus:outline-none focus:border-luxury-gold transition-all text-sm w-full md:w-64"
-              />
-            </div>
-            <button 
-              onClick={() => handleOpenModal()}
-              className="flex items-center space-x-2 bg-luxury-gold hover:bg-luxury-gold/90 text-white px-6 py-2.5 rounded-sm transition-all shadow-xl hover:shadow-luxury-gold/30 active:scale-95 whitespace-nowrap"
-            >
-              <Plus size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Add New</span>
-            </button>
-          </div>
-        </header>
+          <button 
+            onClick={() => handleOpenModal()}
+            className="flex items-center space-x-2 bg-luxury-gold hover:bg-luxury-gold/90 text-white px-8 py-3 rounded-sm transition-all shadow-xl hover:shadow-luxury-gold/30 active:scale-95"
+          >
+            <Plus size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Add New Category</span>
+          </button>
+        </div>
 
         {/* Categories Table */}
         {loading ? (
