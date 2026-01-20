@@ -1,13 +1,18 @@
 package com.example.backend.service.impl;
 
+import com.example.backend.model.Guest;
 import com.example.backend.model.Reservation;
+import com.example.backend.model.enums.PaymentStatus;
 import com.example.backend.model.enums.ReservationStatus;
 import com.example.backend.repository.ReservationRepository;
+import com.example.backend.repository.GuestRepository;
 import com.example.backend.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +21,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private GuestRepository guestRepository;
 
     @Override
     public List<Reservation> getAllReservations() {
@@ -27,11 +35,27 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findById(id);
     }
 
+    @Autowired
+    private com.example.backend.repository.NotificationRepository notificationRepository;
+
     @Override
     public Reservation createReservation(Reservation reservation) {
         reservation.setCreatedAt(LocalDateTime.now());
         reservation.setUpdatedAt(LocalDateTime.now());
-        return reservationRepository.save(reservation);
+        if (reservation.getStatus() == null) {
+            reservation.setStatus(ReservationStatus.pending);
+        }
+        if (reservation.getPaymentStatus() == null) {
+            reservation.setPaymentStatus(PaymentStatus.unpaid);
+        }
+        Reservation saved = reservationRepository.save(reservation);
+        
+        // System notification
+        notificationRepository.save(new com.example.backend.model.Notification(
+            "New booking received! Reservation ID: " + saved.getId(), "booking"
+        ));
+        
+        return saved;
     }
 
     @Override
@@ -45,7 +69,32 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Reservation updatePaymentStatus(String id, PaymentStatus status) {
+        return reservationRepository.findById(id)
+                .map(res -> {
+                    res.setPaymentStatus(status);
+                    res.setUpdatedAt(LocalDateTime.now());
+                    return reservationRepository.save(res);
+                }).orElseThrow(() -> new RuntimeException("Reservation not found"));
+    }
+
+    @Override
     public void deleteReservation(String id) {
         reservationRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean checkAvailability(String roomId, LocalDate checkIn, LocalDate checkOut) {
+        List<Reservation> overlapping = reservationRepository.findOverlappingReservations(roomId, checkIn, checkOut);
+        return overlapping.isEmpty();
+    }
+
+    @Override
+    public List<Reservation> getReservationsByUserId(String userId) {
+        Optional<Guest> guest = guestRepository.findByUserId(userId);
+        if (guest.isPresent()) {
+            return reservationRepository.findByGuestId(guest.get().getId());
+        }
+        return new ArrayList<>();
     }
 }
