@@ -1,0 +1,130 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../utils/AuthContext";
+import {
+  LayoutDashboard,
+  Calendar,
+  ConciergeBell,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
+
+const StaffSidebar = ({ activeTab, setActiveTab }) => {
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const menuItems = [
+    { icon: LayoutDashboard, label: "Overview" },
+    { icon: Calendar, label: "Schedules" },
+    { icon: ConciergeBell, label: "Guest List" },
+  ];
+
+  const handleTabClick = (label) => {
+    setActiveTab(label);
+    setIsMobileMenuOpen(false);
+  };
+
+  return (
+    <>
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-luxury-dark text-white rounded-sm shadow-xl"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/60 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`
+          fixed top-0 left-0 h-full w-64 
+          bg-white dark:bg-luxury-dark 
+          border-r border-gray-200 dark:border-white/10
+          text-luxury-charcoal dark:text-white 
+          p-8 flex flex-col space-y-10 z-40 shadow-2xl
+          transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}
+      >
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45 group cursor-pointer hover:rotate-[225deg] transition-all duration-700">
+            <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-2xl group-hover:rotate-[-225deg] transition-all duration-700">
+             O
+            </span>
+          </div>
+          <div>
+            <span className="font-serif font-bold tracking-[0.2em] text-base uppercase block text-luxury-charcoal dark:text-white">
+              Ocean View
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.4em] text-luxury-gold/80 font-bold">
+              Staff Portal
+            </span>
+          </div>
+        </div>
+
+        <nav className="flex-1 space-y-2 overflow-y-auto">
+          {menuItems.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleTabClick(item.label)}
+              className={`
+                w-full flex items-center space-x-4 p-4 rounded-sm 
+                transition-all duration-300 group
+                ${
+                  activeTab === item.label
+                    ? "bg-luxury-gold text-white shadow-lg shadow-luxury-gold/20"
+                    : "hover:bg-gray-100 dark:hover:bg-white/5 text-luxury-charcoal/60 dark:text-white/40 hover:text-luxury-charcoal dark:hover:text-white"
+                }
+              `}
+            >
+              <item.icon
+                size={18}
+                className={`${activeTab === item.label ? "scale-110" : "group-hover:translate-x-1"} transition-all`}
+              />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="pt-8 border-t border-gray-200 dark:border-white/5">
+          <div className="flex items-center space-x-3 mb-6 px-2">
+            <div className="w-10 h-10 rounded-full bg-luxury-gold/20 flex items-center justify-center text-luxury-gold font-bold">
+              {user?.username?.[0]?.toUpperCase()}
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-luxury-charcoal dark:text-white leading-none mb-1">
+                {user?.username}
+              </p>
+              <p className="text-[8px] uppercase tracking-widest text-luxury-gold/60 font-bold">
+                Operations
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={logout}
+            className="w-full flex items-center space-x-4 p-4 text-red-500 dark:text-red-400/60 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-400/5 rounded-sm transition-all duration-300 group"
+          >
+            <LogOut
+              size={18}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+              Logout
+            </span>
+          </button>
+        </div>
+      </aside>
+    </>
+  );
+};
+
+export default StaffSidebar;

@@ -35,9 +35,6 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findById(id);
     }
 
-    @Autowired
-    private com.example.backend.repository.NotificationRepository notificationRepository;
-
     @Override
     public Reservation createReservation(Reservation reservation) {
         reservation.setCreatedAt(LocalDateTime.now());
@@ -48,12 +45,12 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservation.getPaymentStatus() == null) {
             reservation.setPaymentStatus(PaymentStatus.unpaid);
         }
-        Reservation saved = reservationRepository.save(reservation);
         
-        // System notification
-        notificationRepository.save(new com.example.backend.model.Notification(
-            "New booking received! Reservation ID: " + saved.getId(), "booking"
-        ));
+        // Generate Reservation Number if missing
+        if (reservation.getReservationNumber() == null || reservation.getReservationNumber().isEmpty()) {
+            reservation.setReservationNumber("RES-" + (System.currentTimeMillis() % 1000000));
+        }
+        Reservation saved = reservationRepository.save(reservation);
         
         return saved;
     }
