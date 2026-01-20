@@ -30,6 +30,8 @@ const AdminReservations = () => {
     const [paymentMethod, setPaymentMethod] = useState('cash');
     const [guestDetails, setGuestDetails] = useState(null);
     const [roomDetails, setRoomDetails] = useState(null);
+    const [date, setDate] = useState(new Date());
+    const [view, setView] = useState('month');
 
     const API_URL = 'http://localhost:8080/api/reservations';
     const PAYMENT_API_URL = 'http://localhost:8080/api/payments';
@@ -417,6 +419,10 @@ const AdminReservations = () => {
                         style={{ height: '100%' }}
                         onSelectEvent={handleSelectEvent}
                         eventPropGetter={eventStyleGetter}
+                        date={date}
+                        view={view}
+                        onNavigate={(newDate) => setDate(newDate)}
+                        onView={(newView) => setView(newView)}
                         className="font-sans text-sm dark:text-white"
                          messages={{
                             next: "Next",
