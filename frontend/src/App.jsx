@@ -12,6 +12,7 @@ import About from './pages/About';
 import FAQ from './pages/FAQ';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Gallery from './pages/Gallery';
 import RoomDetail from './pages/RoomDetail';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import RoomCategories from './pages/admin/RoomCategories';
@@ -34,6 +35,7 @@ const App = () => {
                         {/* Public Routes with Main Layout */}
                         <Route path="/" element={<Layout><Home /></Layout>} />
                         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+                        <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
                         <Route path="/rooms" element={<Layout><Rooms /></Layout>} />
                         <Route path="/rooms/:id" element={<Layout><RoomDetail /></Layout>} />
                         <Route path="/login" element={<Layout><Login /></Layout>} />
