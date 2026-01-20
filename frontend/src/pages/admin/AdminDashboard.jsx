@@ -3,8 +3,9 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../utils/AuthContext';
 import axios from 'axios';
 import AdminSidebar from '../../components/admin/AdminSidebar';
+import AdminHeader from '../../components/admin/AdminHeader';
 import { 
-  Moon, Sun, DollarSign, UserCheck, Hotel, Calendar
+  DollarSign, UserCheck, Hotel, Calendar
 } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -22,17 +23,6 @@ const AdminDashboard = () => {
   const [bookingStatusData, setBookingStatusData] = useState([]);
 
   const API_URL = 'http://localhost:8080/api/dashboard/stats';
-
-  const toggleDarkMode = () => {
-    if (darkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    }
-    setDarkMode(!darkMode);
-  };
 
   useEffect(() => {
     fetchDashboardStats();
@@ -83,36 +73,11 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-64 p-6 lg:p-12 min-h-screen pt-20 lg:pt-12">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 lg:mb-16 border-b border-black/5 dark:border-white/5 pb-6 lg:pb-10 gap-6 lg:gap-8">
-          <div>
-            <div className="flex items-center space-x-3 text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-4">
-              <span className="w-8 h-[1px] bg-luxury-gold/30"></span>
-              <span>Central Intelligence</span>
-            </div>
-            <h1 className="text-5xl font-serif text-luxury-charcoal dark:text-white tracking-tight leading-none mb-4">Executive Dashboard</h1>
-            <p className="text-luxury-charcoal/40 dark:text-white/40 text-sm font-medium italic">Real-time resort overview and analytics.</p>
-          </div>
-          
-          <div className="flex items-center space-x-6 bg-white/50 dark:bg-luxury-charcoal/30 p-2 rounded-full border border-black/5 dark:border-white/5 backdrop-blur-xl">
-            <button 
-              onClick={toggleDarkMode}
-              className="p-3 bg-white dark:bg-luxury-charcoal rounded-full shadow-lg text-luxury-gold hover:scale-110 transition-all duration-300"
-            >
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <div className="h-8 w-[1px] bg-black/10 dark:bg-white/10 mx-2"></div>
-            <div className="flex items-center space-x-4 pr-6">
-              <div className="text-right">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-luxury-charcoal dark:text-white leading-none mb-1">{user?.username}</p>
-                <p className="text-[8px] uppercase tracking-widest text-luxury-gold font-bold">Administrator</p>
-              </div>
-              <div className="relative">
-                <img src={`https://ui-avatars.com/api/?name=${user?.username}&background=D4AF37&color=fff`} className="w-12 h-12 rounded-full border-2 border-luxury-gold p-0.5 shadow-xl" alt="Avatar" />
-                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-luxury-dark"></div>
-              </div>
-            </div>
-          </div>
-        </header>
+        <AdminHeader 
+          subtitle="Central Intelligence"
+          title="Executive Dashboard"
+          description="Real-time resort overview and analytics."
+        />
 
         {/* Statistical Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
