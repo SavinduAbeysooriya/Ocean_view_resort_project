@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, MapPin, Phone, CreditCard, Save, CheckCircle2, AlertCircle } from "lucide-react";
+import { User, MapPin, Phone, CreditCard, Save, CheckCircle2, AlertCircle, Download } from "lucide-react";
 import { useAuth } from "../../utils/AuthContext";
 import axios from "axios";
+import PayHereButton from "../../components/PayHereButton";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -16,12 +21,24 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
+  const [reservations, setReservations] = useState([]);
+  const [fetchingReservations, setFetchingReservations] = useState(false);
+
   useEffect(() => {
     fetchProfile();
+    fetchReservations();
+    
+    // Check if there's a message in location state (e.g., from successful booking)
+    if (location.state?.message) {
+      setMessage({ type: "success", text: location.state.message });
+      // Clear state so message doesn't persist on refresh
+      window.history.replaceState({}, document.title);
+    }
   }, []);
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get("http://localhost:8080/api/guests/me", {
         headers: { Authorization: `Bearer ${token}` },
@@ -40,6 +57,38 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchReservations = async () => {
+    try {
+      setFetchingReservations(true);
+      const token = localStorage.getItem("token");
+      if (!user?.id) return;
+      const response = await axios.get(`http://localhost:8080/api/reservations/user/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setReservations(response.data);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    } finally {
+      setFetchingReservations(false);
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'confirmed': return 'text-green-500 bg-green-500/10 border-green-500/20';
+      case 'pending': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
+      case 'cancelled': return 'text-red-500 bg-red-500/10 border-red-500/20';
+      case 'completed': return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
+      default: return 'text-gray-500 bg-gray-500/10 border-gray-500/20';
+    }
+  };
+
+  const getPaymentStatusColor = (status) => {
+    return status?.toLowerCase() === 'paid' 
+      ? 'text-green-500 bg-green-500/10 border-green-500/20' 
+      : 'text-red-500 bg-red-500/10 border-red-500/20';
   };
 
   const handleSubmit = async (e) => {
@@ -70,12 +119,14 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-20 px-6 bg-luxury-cream dark:bg-luxury-dark">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen pt-32 pb-20 px-6 bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500">
+      {/* Debug: Showing if user exists */}
+      {!user && <div className="text-white text-center">Caution: User context is missing</div>}
+      <div className="max-w-5xl mx-auto space-y-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-black/40 backdrop-blur-xl rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 overflow-hidden"
+          className="bg-white dark:bg-luxury-charcoal backdrop-blur-xl rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 overflow-hidden"
         >
           {/* Header */}
           <div className="relative h-48 bg-luxury-gold overflow-hidden">
@@ -83,7 +134,7 @@ const Profile = () => {
               <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"></div>
             </div>
             <div className="absolute -bottom-16 left-8 flex items-end space-x-6">
-              <div className="w-32 h-32 rounded-2xl bg-white p-1 shadow-xl">
+              <div className="w-32 h-32 rounded-2xl bg-white dark:bg-luxury-dark p-1 shadow-xl">
                 <img
                   src={`https://ui-avatars.com/api/?name=${user?.username}&background=D4AF37&color=fff&size=128`}
                   className="w-full h-full rounded-xl object-cover"
@@ -105,10 +156,10 @@ const Profile = () => {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-serif font-bold text-luxury-charcoal dark:text-white">
-                  Complete Your Guest Profile
+                  Guest Profile
                 </h2>
                 <p className="text-luxury-charcoal/60 dark:text-white/60 text-sm">
-                  Please provide your details for a faster booking experience.
+                  Manage your personal details and preferences.
                 </p>
               </div>
             </div>
@@ -144,7 +195,7 @@ const Profile = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
+                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -164,7 +215,7 @@ const Profile = () => {
                       required
                       value={formData.nicNumber}
                       onChange={(e) => setFormData({ ...formData, nicNumber: e.target.value })}
-                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
+                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
                       placeholder="Enter NIC number"
                     />
                   </div>
@@ -184,7 +235,7 @@ const Profile = () => {
                       required
                       value={formData.contactNumber}
                       onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
-                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
+                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white"
                       placeholder="Enter contact number"
                     />
                   </div>
@@ -204,7 +255,7 @@ const Profile = () => {
                       rows="3"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream/50 dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white resize-none"
+                      className="w-full pl-12 pr-4 py-4 bg-luxury-cream dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 transition-all text-luxury-charcoal dark:text-white resize-none"
                       placeholder="Enter your permanent address"
                     ></textarea>
                   </div>
@@ -230,6 +281,109 @@ const Profile = () => {
                 </motion.button>
               </div>
             </form>
+          </div>
+        </motion.div>
+
+        {/* Reservations Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white dark:bg-luxury-charcoal backdrop-blur-xl rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 overflow-hidden"
+        >
+          <div className="p-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-serif font-bold text-luxury-charcoal dark:text-white">
+                  My Reservations
+                </h2>
+                <p className="text-luxury-charcoal/60 dark:text-white/60 text-sm">
+                  View and manage your upcoming and past stays.
+                </p>
+              </div>
+            </div>
+
+            {fetchingReservations ? (
+              <div className="flex justify-center py-20">
+                <div className="w-10 h-10 border-4 border-luxury-gold border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : reservations.length === 0 ? (
+              <div className="text-center py-20 bg-luxury-cream/30 dark:bg-white/5 rounded-2xl border border-dashed border-black/10 dark:border-white/10">
+                <CreditCard className="mx-auto text-luxury-gold/30 mb-4" size={48} />
+                <p className="text-luxury-charcoal/60 dark:text-white/60">No reservations found.</p>
+                <button 
+                  onClick={() => navigate('/rooms')}
+                  className="mt-4 text-luxury-gold font-bold hover:underline"
+                >
+                  Book your first stay
+                </button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-black/5 dark:border-white/10">
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Res #</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Check-In</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Check-Out</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Amount</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Status</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Payment</th>
+                      <th className="pb-4 text-xs font-sans tracking-widest uppercase text-luxury-charcoal/40 dark:text-white/40">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-black/5 dark:border-white/10">
+                    {reservations.map((res) => (
+                      <tr key={res.id} className="group hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                        <td className="py-4 text-sm font-sans font-bold text-luxury-charcoal dark:text-white">
+                          #{res.reservationNumber || res.id?.substring(0, 8) || 'REF'}
+                        </td>
+                        <td className="py-4 text-sm text-luxury-charcoal/60 dark:text-white/60">
+                          {new Date(res.checkInDate).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 text-sm text-luxury-charcoal/60 dark:text-white/60">
+                          {new Date(res.checkOutDate).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 text-sm font-bold text-luxury-gold">
+                          ${res.totalCost}
+                        </td>
+                        <td className="py-4">
+                          <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${getStatusColor(res.status)}`}>
+                            {res.status}
+                          </span>
+                        </td>
+                        <td className="py-4">
+                          <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${getPaymentStatusColor(res.paymentStatus)}`}>
+                            {res.paymentStatus}
+                          </span>
+                        </td>
+                        <td className="py-4">
+                          {res.paymentStatus?.toLowerCase() === 'unpaid' && res.status?.toLowerCase() !== 'cancelled' && (
+                            <PayHereButton 
+                              reservation={res} 
+                              onSuccess={() => {
+                                fetchReservations();
+                                setMessage({ type: 'success', text: 'Payment successful!' });
+                              }}
+                              onError={(err) => setMessage({ type: 'error', text: err })}
+                            />
+                          )}
+                          {res.paymentStatus?.toLowerCase() === 'paid' && (
+                            <button
+                              onClick={() => navigate(`/profile/invoice/${res.id}`)}
+                              className="flex items-center space-x-2 text-luxury-gold hover:text-yellow-600 font-bold uppercase tracking-widest text-[10px]"
+                            >
+                              <Download size={14} />
+                              <span>Invoice</span>
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

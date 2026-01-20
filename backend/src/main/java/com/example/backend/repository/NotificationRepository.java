@@ -1,12 +1,12 @@
 package com.example.backend.repository;
 
-import com.example.backend.model.Payment;
+import com.example.backend.model.Notification;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface PaymentRepository extends MongoRepository<Payment, String> {
-    List<Payment> findByReservationId(String reservationId);
+public interface NotificationRepository extends MongoRepository<Notification, String> {
+    List<Notification> findByReadFalseOrderByCreatedAtDesc();
 }

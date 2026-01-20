@@ -58,6 +58,11 @@ public class SecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/mongo-test")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/uploads/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/rooms/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/room-categories/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/reservations/check-availability")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/payments/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/invoices/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
                         .anyRequest().authenticated()
                 );
