@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../utils/AuthContext';
 import AdminSidebar from '../../components/admin/AdminSidebar';
+import AdminHeader from '../../components/admin/AdminHeader';
 import { 
-  Edit2, Trash2, Plus, X, Search, Moon, Sun
+  Edit2, Trash2, Plus, X, Search
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,7 +16,6 @@ const AdminUsers = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-    const [darkMode, setDarkMode] = useState(document.documentElement.classList.contains('dark'));
 
     // Form State
     const [formData, setFormData] = useState({
@@ -26,17 +26,6 @@ const AdminUsers = () => {
     });
 
     const API_URL = 'http://localhost:8080/api/users';
-
-    const toggleDarkMode = () => {
-        if (darkMode) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-        setDarkMode(!darkMode);
-    };
 
     useEffect(() => {
         fetchUsers();
@@ -130,44 +119,34 @@ const AdminUsers = () => {
 
             {/* Main Content */}
             <main className="flex-1 lg:ml-64 p-6 lg:p-12 min-h-screen pt-20 lg:pt-12">
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 border-b border-black/5 dark:border-white/5 pb-10 gap-8">
-                     <div>
-                        <div className="flex items-center space-x-3 text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-4">
-                            <span className="w-8 h-[1px] bg-luxury-gold/30"></span>
-                            <span>System Administration</span>
-                        </div>
-                        <h1 className="text-5xl font-serif text-luxury-charcoal dark:text-white tracking-tight leading-none mb-4">User Management</h1>
-                        <p className="text-luxury-charcoal/40 dark:text-white/40 text-sm font-medium italic">Manage admins, staff, and guests.</p>
-                    </div>
+                <AdminHeader 
+                    subtitle="System Administration"
+                    title="User Management"
+                    description="Manage admins, staff, and guests."
+                />
 
-                    <div className="flex items-center space-x-6">
-                        <button 
-                            onClick={toggleDarkMode}
-                            className="p-3 bg-white dark:bg-luxury-charcoal rounded-full shadow-lg text-luxury-gold hover:scale-110 transition-all duration-300"
-                        >
-                            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-                        <button 
-                            onClick={() => { resetForm(); setIsModalOpen(true); }}
-                            className="flex items-center space-x-3 bg-luxury-gold hover:bg-yellow-600 text-white px-8 py-4 rounded-sm transition-all shadow-xl hover:shadow-luxury-gold/20"
-                        >
-                            <Plus size={18} />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Add User</span>
-                        </button>
-                    </div>
-                </header>
-
-                <div className="bg-white dark:bg-luxury-charcoal p-8 rounded-sm shadow-xl border border-black/5 dark:border-white/5">
-                    <div className="mb-8 relative">
+                {/* Action Toolbar */}
+                <div className="flex justify-between items-center mb-8">
+                    <div className="relative">
                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                         <input 
                             type="text" 
                             placeholder="Search users..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-sm focus:outline-none focus:border-luxury-gold text-luxury-charcoal dark:text-white transition-colors"
+                            className="w-96 pl-12 pr-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-sm focus:outline-none focus:border-luxury-gold text-luxury-charcoal dark:text-white transition-colors"
                         />
                     </div>
+                    <button 
+                        onClick={() => { resetForm(); setIsModalOpen(true); }}
+                        className="flex items-center space-x-3 bg-luxury-gold hover:bg-yellow-600 text-white px-8 py-3 rounded-sm transition-all shadow-xl hover:shadow-luxury-gold/20"
+                    >
+                        <Plus size={18} />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Add User</span>
+                    </button>
+                </div>
+
+                <div className="bg-white dark:bg-luxury-charcoal p-8 rounded-sm shadow-xl border border-black/5 dark:border-white/5">
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
