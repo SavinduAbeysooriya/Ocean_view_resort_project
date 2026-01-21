@@ -3,10 +3,11 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuth } from '../../utils/AuthContext';
+import logo from '../../assets/logo.png';
 import { 
   Check, X, Trash2, Mail, CreditCard, Printer, Calendar as CalIcon,
   LogOut, LayoutDashboard, Users, Hotel, Settings, UserCheck, Bell, DollarSign,
-  Send, Download
+  Send, Download, Info
 } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -209,11 +210,12 @@ const AdminReservations = () => {
             reservationId: selectedReservation.id,
             guestId: selectedReservation.guestId,
             roomId: selectedReservation.roomId,
-            issueDate: new Date().toISOString().split('T')[0],
-            paymentDeadline: new Date().toISOString().split('T')[0], // Immediate since paid
+            issueDate: new Date().toISOString(),
+            dueDate: new Date().toISOString(),
             subtotal: selectedReservation.totalCost,
-            taxAmount: selectedReservation.totalCost * 0.1, 
-            status: 'paid', // Generated AFTER payment
+            taxAmount: selectedReservation.totalCost * 0.1,
+            amount: selectedReservation.totalCost * 1.1,
+            status: 'paid',
             invoiceNumber: `INV-${Date.now()}`
         };
 
@@ -323,9 +325,7 @@ const AdminReservations = () => {
                 {selectedReservation && (
                     <div className="max-w-3xl mx-auto border border-gray-200 p-12">
                         <div className="text-center mb-12 border-b border-gray-200 pb-8">
-                             <div className="w-16 h-16 border-2 border-black mx-auto flex items-center justify-center transform rotate-45 mb-4">
-                                <span className="transform -rotate-45 font-serif font-bold text-2xl">O</span>
-                            </div>
+                             <img src={logo} alt="Resort Logo" className="w-20 mx-auto mb-4"/>
                             <h1 className="text-3xl font-serif uppercase tracking-widest mb-2">Ocean View Resort</h1>
                             <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Official Tax Invoice</p>
                         </div>
@@ -360,15 +360,15 @@ const AdminReservations = () => {
                                         <p className="font-bold">Room Accommodation</p>
                                         <p className="text-xs text-gray-500">{roomDetails?.roomNumber ? `Room ${roomDetails.roomNumber}` : 'Standard Room'} - {roomDetails?.bedType || 'Acc'} ({new Date(selectedReservation.checkInDate).toLocaleDateString()} to {new Date(selectedReservation.checkOutDate).toLocaleDateString()})</p>
                                     </td>
-                                    <td className="text-right py-4 font-mono">${roomDetails?.ratePerNight || (selectedReservation.totalCost / Math.ceil((new Date(selectedReservation.checkOutDate) - new Date(selectedReservation.checkInDate))/(1000 * 60 * 60 * 24))).toFixed(2)}</td>
+                                    <td className="text-right py-4 font-mono">LKR {roomDetails?.ratePerNight || (selectedReservation.totalCost / Math.ceil((new Date(selectedReservation.checkOutDate) - new Date(selectedReservation.checkInDate))/(1000 * 60 * 60 * 24))).toFixed(2)}</td>
                                     <td className="text-right py-4 font-mono">{Math.ceil((new Date(selectedReservation.checkOutDate) - new Date(selectedReservation.checkInDate))/(1000 * 60 * 60 * 24))} Nights</td>
-                                    <td className="text-right py-4 font-mono">${selectedReservation.totalCost}</td>
+                                    <td className="text-right py-4 font-mono">LKR {selectedReservation.totalCost}</td>
                                 </tr>
                                 <tr className="border-b border-gray-100">
                                    <td className="py-4 font-bold text-sm">Service Tax (10%)</td>
                                    <td className="text-right py-4 font-mono">-</td>
                                    <td className="text-right py-4 font-mono">-</td>
-                                   <td className="text-right py-4 font-mono">${(selectedReservation.totalCost * 0.10).toFixed(2)}</td>
+                                   <td className="text-right py-4 font-mono">LKR {(selectedReservation.totalCost * 0.10).toFixed(2)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -377,15 +377,15 @@ const AdminReservations = () => {
                             <div className="w-1/2">
                                 <div className="flex justify-between py-2 border-b border-gray-100">
                                     <span className="text-xs uppercase tracking-widest">Subtotal</span>
-                                    <span className="font-mono">${selectedReservation.totalCost}</span>
+                                    <span className="font-mono">LKR {selectedReservation.totalCost}</span>
                                 </div>
                                 <div className="flex justify-between py-2 border-b border-black">
                                     <span className="text-xs uppercase tracking-widest font-bold">Total Due</span>
-                                    <span className="font-mono font-bold text-xl">${(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
+                                    <span className="font-mono font-bold text-xl">LKR {(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between py-2 mt-2">
                                     <span className="text-xs uppercase tracking-widest text-gray-500">Payment ({paymentMethod})</span>
-                                    <span className="font-mono text-green-600">-${(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
+                                    <span className="font-mono text-green-600">-LKR {(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
@@ -443,105 +443,200 @@ const AdminReservations = () => {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-white dark:bg-luxury-charcoal w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-sm shadow-2xl flex flex-col md:flex-row border border-luxury-gold/20"
+                            className="bg-white dark:bg-luxury-charcoal w-full max-w-5xl max-h-[95vh] overflow-y-auto rounded-sm shadow-2xl flex flex-col md:flex-row border border-luxury-gold/20"
                         >
-                             <div className="w-full md:w-1/3 bg-luxury-dark text-white p-8 border-r border-white/5">
-                                <h2 className="text-2xl font-serif mb-6 text-luxury-gold tracking-widest">DETAILS</h2>
-                                <div className="space-y-6 text-sm">
-                                    <div className="pb-4 border-b border-white/5">
-                                        <p className="text-white/40 uppercase text-[10px] tracking-widest font-bold mb-1">Reservation ID</p>
-                                        <p className="font-mono text-lg">{selectedReservation.reservationNumber}</p>
+                             {/* Left Navigation/Summary Sidebar */}
+                             <div className="w-full md:w-72 bg-luxury-dark text-white p-6 flex flex-col border-r border-white/5 shadow-2xl shrink-0">
+                                <div className="mb-8 text-center">
+                                    <img src={logo} alt="Resort Logo" className="w-20 mx-auto mb-4 hover:scale-105 transition-transform duration-300"/>
+                                    <h2 className="text-lg font-serif text-luxury-gold tracking-[0.2em] uppercase">Reservation</h2>
+                                </div>
+
+                                <div className="flex-1 space-y-6">
+                                    <div className="bg-white/5 p-3 rounded-sm border border-white/10">
+                                        <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Confirmation</p>
+                                        <p className="font-mono text-base text-luxury-gold tracking-tighter">{selectedReservation.reservationNumber}</p>
                                     </div>
-                                    <div>
-                                        <p className="text-white/40 uppercase text-[10px] tracking-widest font-bold mb-1">Duration</p>
-                                        <p className="font-serif text-lg">{new Date(selectedReservation.checkInDate).toLocaleDateString()} — {new Date(selectedReservation.checkOutDate).toLocaleDateString()}</p>
+                                    
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="bg-white/5 p-2 rounded-sm border border-white/10 text-center">
+                                            <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Booking</p>
+                                            <span className={`text-[9px] font-bold uppercase ${
+                                                selectedReservation.status === 'confirmed' ? 'text-green-400' : 
+                                                selectedReservation.status === 'cancelled' ? 'text-red-400' : 'text-yellow-400'
+                                            }`}>
+                                                {selectedReservation.status}
+                                            </span>
+                                        </div>
+                                        <div className="bg-white/5 p-2 rounded-sm border border-white/10 text-center">
+                                            <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Payment</p>
+                                            <span className={`text-[9px] font-bold uppercase ${
+                                                selectedReservation.paymentStatus === 'paid' ? 'text-green-400' : 'text-red-400'
+                                            }`}>
+                                                {selectedReservation.paymentStatus}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-white/40 uppercase text-[10px] tracking-widest font-bold mb-1">Financials</p>
-                                        <p className="text-2xl font-serif text-luxury-gold">${selectedReservation.totalCost}</p>
+
+                                    <div className="pt-4 border-t border-white/5 space-y-3">
+                                        <div className="flex items-center space-x-3">
+                                            <CalIcon size={12} className="text-luxury-gold"/>
+                                            <p className="text-xs font-serif">{moment(selectedReservation.checkInDate).format('MMM DD')} - {moment(selectedReservation.checkOutDate).format('MMM DD, YYYY')}</p>
+                                        </div>
+                                        <div className="flex items-center space-x-3">
+                                           
+                                            <p className="text-lg font-serif text-luxury-gold">LKR {selectedReservation.totalCost}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-white/40 uppercase text-[10px] tracking-widest font-bold mb-2">Current Status</p>
-                                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
-                                            selectedReservation.status === 'confirmed' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
-                                            selectedReservation.status === 'cancelled' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
-                                        }`}>
-                                            {selectedReservation.status}
-                                        </span>
+                                </div>
+
+                                <div className="mt-8 pt-6 border-t border-white/5">
+                                    <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-3">Terminal Actions</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {selectedReservation.status === 'pending' && (
+                                            <>
+                                                <button onClick={() => handleStatusUpdate('confirmed')} className="flex items-center justify-center space-x-2 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white py-2 rounded-sm transition-all border border-green-600/30 text-[9px] font-bold uppercase">
+                                                    <Check size={12}/> <span>Approve</span>
+                                                </button>
+                                                <button onClick={() => handleStatusUpdate('cancelled')} className="flex items-center justify-center space-x-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white py-2 rounded-sm transition-all border border-red-600/30 text-[9px] font-bold uppercase">
+                                                    <X size={12}/> <span>Reject</span>
+                                                </button>
+                                            </>
+                                        )}
+                                        <button onClick={handleDelete} className="flex items-center justify-center space-x-2 bg-white/5 hover:bg-red-600 text-white/60 hover:text-white py-2 rounded-sm transition-all border border-white/10 text-[9px] font-bold uppercase">
+                                            <Trash2 size={12}/> <span>Delete</span>
+                                        </button>
+                                     
                                     </div>
                                 </div>
                              </div>
 
-                             <div className="flex-1 p-10 bg-luxury-cream/20 dark:bg-white/5">
-                                <div className="flex justify-between items-center mb-10">
-                                    <h3 className="text-xl font-bold uppercase tracking-[0.2em] text-luxury-charcoal dark:text-white">Management Console</h3>
-                                    <button onClick={() => setIsModalOpen(false)} className="text-luxury-charcoal/40 dark:text-white/40 hover:text-red-500 transition-colors"><X size={24}/></button>
+                             {/* Right Detailed Content Area */}
+                             <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-luxury-charcoal">
+                                <div className="px-8 py-4 flex justify-between items-center bg-luxury-cream/10 dark:bg-black/10 border-b border-black/5 dark:border-white/5">
+                                    <h3 className="text-base font-serif tracking-widest uppercase text-luxury-charcoal dark:text-white">Dossier Details</h3>
+                                    <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-red-500/10 hover:text-red-500 rounded-full transition-all text-luxury-charcoal/30 dark:text-white/20"><X size={18}/></button>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-6 mb-12">
-                                    <button onClick={() => handleStatusUpdate('confirmed')} className="flex items-center justify-center space-x-3 bg-green-600 hover:bg-green-700 text-white py-4 rounded-sm transition-all shadow-lg hover:shadow-green-500/20 text-[10px] font-bold uppercase tracking-[0.2em]">
-                                        <Check size={16}/> <span>Approve</span>
-                                    </button>
-                                    <button onClick={() => handleStatusUpdate('cancelled')} className="flex items-center justify-center space-x-3 bg-red-500 hover:bg-red-600 text-white py-4 rounded-sm transition-all shadow-lg hover:shadow-red-500/20 text-[10px] font-bold uppercase tracking-[0.2em]">
-                                        <X size={16}/> <span>Reject</span>
-                                    </button>
-                                    <button className="flex items-center justify-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-sm transition-all shadow-lg hover:shadow-blue-500/20 text-[10px] font-bold uppercase tracking-[0.2em]">
-                                        <Mail size={16}/> <span>Contact</span>
-                                    </button>
-                                    <button onClick={handleDelete} className="flex items-center justify-center space-x-3 bg-gray-600 hover:bg-gray-700 text-white py-4 rounded-sm transition-all shadow-lg hover:shadow-gray-500/20 text-[10px] font-bold uppercase tracking-[0.2em]">
-                                        <Trash2 size={16}/> <span>Delete</span>
-                                    </button>
-                                </div>
-
-                                <div className="border-t border-black/10 dark:border-white/10 pt-8">
-                                    <h3 className="text-sm font-bold uppercase tracking-widest text-luxury-charcoal dark:text-white mb-6 flex items-center">
-                                        <CreditCard className="mr-3 text-luxury-gold" size={18}/> Financial Overview
-                                    </h3>
-                                    
-                                    {paymentDetails.length > 0 ? (
-                                        <div className="space-y-3 mb-6">
-                                            {paymentDetails.map(pay => (
-                                                <div key={pay.id} className="bg-white dark:bg-white/5 p-4 rounded-sm border border-black/5 dark:border-white/5 flex justify-between items-center transition-all hover:border-luxury-gold/30">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-widest text-luxury-charcoal dark:text-white">{pay.paymentMethod}</p>
-                                                        <p className="text-[10px] text-luxury-charcoal/40 dark:text-white/40">{new Date(pay.transactionDate).toLocaleString()}</p>
+                                <div className="flex-1 overflow-hidden p-6 space-y-6">
+                                    {/* Group: Primary Entities in one row */}
+                                    <div className="grid grid-cols-2 gap-6">
+                                        {/* Guest Card */}
+                                        <div className="space-y-3">
+                                            <div className="flex items-center space-x-2 text-luxury-gold">
+                                                <Users size={14}/>
+                                                <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Guest Profile</h4>
+                                            </div>
+                                            {guestDetails ? (
+                                                <div className="bg-luxury-cream/20 dark:bg-black/20 p-4 rounded-sm border border-black/5 dark:border-white/5 text-[11px]">
+                                                    <p className="font-serif text-base text-luxury-charcoal dark:text-white mb-2">{guestDetails.name}</p>
+                                                    <div className="space-y-1 text-black/60 dark:text-white/60">
+                                                        <p><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">Contact:</span> {guestDetails.contactNumber}</p>
+                                                        <p><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">NIC:</span> {guestDetails.nicNumber || 'N/A'}</p>
+                                                        <p className="truncate"><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">Address:</span> {guestDetails.address || 'N/A'}</p>
                                                     </div>
-                                                    <span className="font-mono font-bold text-green-500 text-sm">${pay.amount}</span>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                <div className="h-24 bg-black/5 animate-pulse rounded-sm"></div>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <div className="p-4 border border-dashed border-black/10 dark:border-white/10 rounded-sm mb-6 text-center">
-                                            <p className="text-[10px] uppercase tracking-widest text-luxury-charcoal/40 dark:text-white/40">No Paid Entries Found</p>
-                                        </div>
-                                    )}
 
-                                    <div className="flex space-x-2">
-                                         <button 
-                                            onClick={() => setIsPaymentModalOpen(true)} 
-                                            className="flex-1 bg-green-600 text-white hover:bg-green-700 py-3 rounded-sm transition-all text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center shadow-lg hover:shadow-green-500/20"
-                                        >
-                                            <DollarSign size={16} className="mr-2"/> Pay
-                                        </button>
-                                        
-                                        {!invoice ? (
-                                             <button 
-                                                onClick={handleGenerateInvoice} 
-                                                disabled={paymentDetails.length === 0}
-                                                className={`flex-1 border border-luxury-gold py-3 rounded-sm transition-all text-[10px] font-bold uppercase tracking-[0.2em] ${paymentDetails.length === 0 ? 'opacity-50 cursor-not-allowed text-gray-400 border-gray-400' : 'text-luxury-gold hover:bg-luxury-gold hover:text-white cursor-pointer'}`}
-                                             >
-                                                Generate
-                                            </button>
-                                        ) : (
-                                            <>
-                                                <button onClick={handlePrintInvoice} className="flex-1 bg-luxury-charcoal dark:bg-white text-white dark:text-luxury-charcoal hover:opacity-90 py-3 rounded-sm transition-all text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center shadow-xl">
-                                                    <Download size={16} className="mr-2"/> Download
-                                                </button>
-                                                <button onClick={handleSendInvoice} className="flex-1 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-3 rounded-sm transition-all text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center">
-                                                    <Send size={16} className="mr-2"/> Send
-                                                </button>
-                                            </>
-                                        )}
+                                        {/* Suite Card */}
+                                        <div className="space-y-3">
+                                            <div className="flex items-center space-x-2 text-luxury-gold">
+                                                <Hotel size={14}/>
+                                                <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Suite Allocation</h4>
+                                            </div>
+                                            {roomDetails ? (
+                                                <div className="bg-luxury-cream/20 dark:bg-black/20 p-4 rounded-sm border border-black/5 dark:border-white/5 text-[11px]">
+                                                    <p className="font-serif text-2xl text-luxury-gold mb-1">#{roomDetails.roomNumber}</p>
+                                                    <div className="space-y-1 text-black/60 dark:text-white/60">
+                                                        <p className="font-bold uppercase text-[9px]">{roomDetails.bedType}</p>
+                                                        <div className="flex justify-between">
+                                                            <span>{roomDetails.ac ? 'AC' : 'Non-AC'}</span>
+                                                            <span className="opacity-50">LKR {roomDetails.ratePerNight}/Night</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="h-24 bg-black/5 animate-pulse rounded-sm"></div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Group: Transactions */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-2">
+                                            <div className="flex items-center space-x-2 text-luxury-gold">
+                                                <CreditCard size={14}/>
+                                                <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Financial Ledger</h4>
+                                            </div>
+                                            <div className="flex space-x-2">
+                                                {selectedReservation.paymentStatus !== 'paid' && (
+                                                    <button onClick={() => setIsPaymentModalOpen(true)} className="bg-luxury-gold hover:bg-luxury-gold/90 text-white text-[8px] font-bold uppercase px-3 py-1.5 rounded-sm transition-all transform hover:-translate-y-0.5">
+                                                        Record Payment
+                                                    </button>
+                                                )}
+                                                {!invoice ? (
+                                                    <button 
+                                                        onClick={handleGenerateInvoice} 
+                                                        disabled={selectedReservation.paymentStatus !== 'paid' && paymentDetails.length === 0}
+                                                        className={`border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-white text-[8px] font-bold uppercase px-3 py-1.5 rounded-sm transition-all ${ (selectedReservation.paymentStatus !== 'paid' && paymentDetails.length === 0) ? 'opacity-30' : ''}`}
+                                                    >
+                                                        Generate Invoice
+                                                    </button>
+                                                ) : (
+                                                    <div className="flex space-x-1">
+                                                        <button onClick={handlePrintInvoice} className="bg-luxury-charcoal dark:bg-white text-white dark:text-luxury-charcoal text-[8px] font-bold uppercase px-3 py-1.5 rounded-sm transition-all">
+                                                            Receipt
+                                                        </button>
+                                                        <button onClick={handleSendInvoice} className="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white text-[8px] font-bold uppercase px-3 py-1.5 rounded-sm transition-all">
+                                                            Mail Invoice to Guest
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                            {paymentDetails.length > 0 ? (
+                                                <div className="space-y-2">
+                                                    {paymentDetails.map(pay => (
+                                                        <div key={pay.id} className="bg-white dark:bg-black/10 p-2.5 rounded-sm border border-black/5 dark:border-white/5 flex justify-between items-center">
+                                                            <div className="flex items-center space-x-3">
+                                                                <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center text-green-500"><Check size={10}/></div>
+                                                                <div>
+                                                                    <p className="text-[9px] font-bold uppercase">{pay.paymentMethod}</p>
+                                                                    <p className="text-[8px] opacity-40 font-mono">{moment(pay.transactionDate).format('YYYY-MM-DD HH:mm')}</p>
+                                                                </div>
+                                                            </div>
+                                                            <span className="text-[11px] font-bold text-green-500 font-mono">LKR {pay.amount.toFixed(2)}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="p-3 bg-luxury-cream/10 dark:bg-white/5 rounded-sm border border-black/5 dark:border-white/5">
+                                                     <div className="flex items-center space-x-2 text-luxury-gold mb-2">
+                                                         <Info size={12}/>
+                                                         <h4 className="text-[8px] font-bold uppercase tracking-widest">System Intelligence</h4>
+                                                     </div>
+                                                     <div className="space-y-1.5 text-[10px]">
+                                                         <div className="flex justify-between">
+                                                             <span className="opacity-40 uppercase text-[8px]">Created At</span>
+                                                             <span className="text-luxury-charcoal dark:text-white font-mono">{moment(selectedReservation.createdAt).format('YYYY-MM-DD HH:mm')}</span>
+                                                         </div>
+                                                         <div className="flex justify-between">
+                                                             <span className="opacity-40 uppercase text-[8px]">Last Update</span>
+                                                             <span className="text-luxury-charcoal dark:text-white font-mono">{moment(selectedReservation.updatedAt).format('YYYY-MM-DD HH:mm')}</span>
+                                                         </div>
+                                                         <div className="pt-2 mt-1 border-t border-black/5 dark:border-white/5">
+                                                             <p className="text-[8px] uppercase tracking-tighter opacity-40 mb-1">Dossier Notes</p>
+                                                             <p className="text-luxury-charcoal/80 dark:text-white/80 italic leading-relaxed text-[10px]">{selectedReservation.notes || "Standard Booking - No specific preferences noted."}</p>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                              </div>

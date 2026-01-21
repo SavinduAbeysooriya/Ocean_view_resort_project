@@ -204,10 +204,10 @@ const RoomCategories = () => {
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-luxury-dark/5 dark:bg-white/5 border-b border-black/5 dark:border-white/5">
-                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60">Legacy Image</th>
-                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60">Category Identity</th>
-                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60">Description Meta</th>
-                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60 text-right">Utility</th>
+                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60"> Image</th>
+                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60">Category </th>
+                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60">Description </th>
+                    <th className="px-8 py-6 text-[10px] uppercase tracking-widest font-bold text-luxury-charcoal/60 dark:text-white/60 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/5 dark:divide-white/5">
@@ -305,7 +305,7 @@ const RoomCategories = () => {
                   <h2 className="text-3xl font-serif text-luxury-charcoal dark:text-white mb-1">
                     {editingCategory ? 'Modify Category' : 'New Collection'}
                   </h2>
-                  <p className="text-xs text-luxury-gold uppercase tracking-widest font-bold">Room Category Studio</p>
+                  <p className="text-xs text-luxury-gold uppercase tracking-widest font-bold">Room Category configuration</p>
                 </div>
                 <button 
                   onClick={handleCloseModal}
@@ -330,7 +330,7 @@ const RoomCategories = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-luxury-gold">Vivid Description</label>
+                    <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-luxury-gold">Description</label>
                     <textarea 
                       value={formData.description}
                       onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -341,7 +341,7 @@ const RoomCategories = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-luxury-gold block">Visual Archive</label>
+                    <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-luxury-gold block">Image </label>
                     <div className="flex flex-col md:flex-row gap-6">
                       <div className="relative flex-1">
                         <input 
@@ -358,7 +358,7 @@ const RoomCategories = () => {
                           <div className="flex flex-col items-center space-y-2">
                             <ImageIcon className="text-luxury-charcoal/20 dark:text-white/20" size={32} />
                             <p className="text-[10px] text-luxury-charcoal/40 dark:text-white/40 uppercase font-bold tracking-widest text-center px-4">
-                              {selectedFile ? selectedFile.name : 'Upload Masterpiece'}
+                              {selectedFile ? selectedFile.name : 'Upload Image'}
                             </p>
                           </div>
                         </label>
@@ -388,7 +388,7 @@ const RoomCategories = () => {
                         Archiving...
                       </span>
                     ) : (
-                      editingCategory ? 'Update Collection' : 'Archive Category'
+                      editingCategory ? 'Update Collection' : 'Add Category'
                     )}
                   </button>
                 </div>
