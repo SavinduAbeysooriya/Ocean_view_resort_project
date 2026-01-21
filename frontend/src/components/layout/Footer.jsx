@@ -94,8 +94,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 pt-20 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 text-[10px] text-luxury-charcoal/30 dark:text-white/30 uppercase tracking-[0.2em] font-sans">
         <p>© 2026 Ocean View Luxury Resort. All Rights Reserved.</p>
         <div className="flex space-x-8">
-          <a href="#" className="hover:text-luxury-charcoal dark:hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          <a href="/privacy-policy" className="hover:text-luxury-charcoal dark:hover:text-white transition-colors">Privacy Policy</a>
+          <a href="/terms-of-service" className="hover:text-luxury-charcoal dark:hover:text-white transition-colors">Terms of Service</a>
         </div>
       </div>
     </footer>

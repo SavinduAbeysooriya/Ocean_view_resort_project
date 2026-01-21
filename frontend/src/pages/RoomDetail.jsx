@@ -268,7 +268,7 @@ const RoomDetail = () => {
                   </h1>
                 </div>
                 <div className="text-right">
-                  <p className="text-4xl font-serif text-luxury-gold">${room.ratePerNight}</p>
+                  <p className="text-4xl font-serif text-luxury-gold">LKR {room.ratePerNight}</p>
                   <p className="text-sm text-luxury-charcoal/60 dark:text-white/60">per night</p>
                 </div>
               </div>
@@ -430,11 +430,11 @@ const RoomDetail = () => {
                 <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
                   <div className="flex justify-between items-center">
                     <span className="text-luxury-charcoal/60 dark:text-white/60">Rate per night</span>
-                    <span className="font-serif text-luxury-charcoal dark:text-white">${room.ratePerNight}</span>
+                    <span className="font-serif text-luxury-charcoal dark:text-white">LKR {room.ratePerNight}</span>
                   </div>
                   <div className="flex justify-between items-center text-xl font-serif">
                     <span className="text-luxury-charcoal dark:text-white">Total Amount</span>
-                    <span className="text-luxury-gold">${calculateTotal()}</span>
+                    <span className="text-luxury-gold">LKR {calculateTotal()}</span>
                   </div>
                 </div>
 

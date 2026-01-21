@@ -14,6 +14,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Gallery from './pages/Gallery';
 import RoomDetail from './pages/RoomDetail';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import RoomCategories from './pages/admin/RoomCategories';
 import AdminRooms from './pages/admin/Rooms';
@@ -42,6 +44,8 @@ const App = () => {
                         <Route path="/register" element={<Layout><Register /></Layout>} />
                         <Route path="/about" element={<Layout><About /></Layout>} />
                         <Route path="/faq" element={<Layout><FAQ /></Layout>} />
+                        <Route path="/privacy-policy" element={<Layout><PrivacyPolicy /></Layout>} />
+                        <Route path="/terms-of-service" element={<Layout><TermsOfService /></Layout>} />
                         <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
                         <Route path="/reset-password" element={<ResetPassword />} />
 

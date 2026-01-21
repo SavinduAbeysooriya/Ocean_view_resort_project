@@ -305,7 +305,7 @@ const Rooms = () => {
                   {/* Price Range */}
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-luxury-charcoal/60 dark:text-white/60 mb-2">
-                      Price Per Night ($)
+                      Price Per Night (LKR)
                     </label>
                     <div className="flex space-x-2">
                       <input
@@ -524,7 +524,7 @@ const Rooms = () => {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-3xl font-serif text-luxury-gold">${room.ratePerNight}</p>
+                          <p className="text-3xl font-serif text-luxury-gold">LKR {room.ratePerNight}</p>
                           <p className="text-xs text-luxury-charcoal/60 dark:text-white/60">per night</p>
                         </div>
                       </div>

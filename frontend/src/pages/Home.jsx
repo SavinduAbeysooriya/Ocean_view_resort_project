@@ -147,7 +147,7 @@ const Home = () => {
                                         <div className="flex justify-between items-center mb-4">
                                             <h3 className="text-xl font-serif text-charcoal dark:text-white">Room {room.roomNumber}</h3>
                                             <div className="text-right">
-                                                <p className="text-xl font-serif text-luxury-gold">${room.ratePerNight}</p>
+                                                <p className="text-xl font-serif text-luxury-gold">LKR {room.ratePerNight}</p>
                                                 <p className="text-[10px] text-gray-400 uppercase tracking-widest">Per Night</p>
                                             </div>
                                         </div>
