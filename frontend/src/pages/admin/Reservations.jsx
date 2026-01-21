@@ -213,9 +213,10 @@ const AdminReservations = () => {
             issueDate: new Date().toISOString(),
             dueDate: new Date().toISOString(),
             subtotal: selectedReservation.totalCost,
-            taxAmount: selectedReservation.totalCost * 0.1,
-            amount: selectedReservation.totalCost * 1.1,
+            taxAmount: 0,
+            amount: selectedReservation.totalCost,
             status: 'paid',
+            currency: 'LKR',
             invoiceNumber: `INV-${Date.now()}`
         };
 
@@ -365,10 +366,10 @@ const AdminReservations = () => {
                                     <td className="text-right py-4 font-mono">LKR {selectedReservation.totalCost}</td>
                                 </tr>
                                 <tr className="border-b border-gray-100">
-                                   <td className="py-4 font-bold text-sm">Service Tax (10%)</td>
+                                   <td className="py-4 font-bold text-sm">Service Tax (0%)</td>
                                    <td className="text-right py-4 font-mono">-</td>
                                    <td className="text-right py-4 font-mono">-</td>
-                                   <td className="text-right py-4 font-mono">LKR {(selectedReservation.totalCost * 0.10).toFixed(2)}</td>
+                                   <td className="text-right py-4 font-mono">LKR 0.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -380,12 +381,12 @@ const AdminReservations = () => {
                                     <span className="font-mono">LKR {selectedReservation.totalCost}</span>
                                 </div>
                                 <div className="flex justify-between py-2 border-b border-black">
-                                    <span className="text-xs uppercase tracking-widest font-bold">Total Due</span>
-                                    <span className="font-mono font-bold text-xl">LKR {(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
+                                    <span className="text-xs uppercase tracking-widest font-bold">Total Amount</span>
+                                    <span className="font-mono font-bold text-xl">LKR {selectedReservation.totalCost.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between py-2 mt-2">
                                     <span className="text-xs uppercase tracking-widest text-gray-500">Payment ({paymentMethod})</span>
-                                    <span className="font-mono text-green-600">-LKR {(selectedReservation.totalCost * 1.10).toFixed(2)}</span>
+                                    <span className="font-mono text-green-600">-LKR {selectedReservation.totalCost.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>

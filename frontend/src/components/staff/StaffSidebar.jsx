@@ -9,6 +9,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import logo from "../../assets/logo.png";
 
 const StaffSidebar = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
@@ -54,11 +55,7 @@ const StaffSidebar = ({ activeTab, setActiveTab }) => {
         `}
       >
         <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45 group cursor-pointer hover:rotate-[225deg] transition-all duration-700">
-            <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-2xl group-hover:rotate-[-225deg] transition-all duration-700">
-             O
-            </span>
-          </div>
+          <img src={logo} alt="Resort Logo" className="w-12 hover:scale-110 transition-transform duration-300" />
           <div>
             <span className="font-serif font-bold tracking-[0.2em] text-base uppercase block text-luxury-charcoal dark:text-white">
               Ocean View
