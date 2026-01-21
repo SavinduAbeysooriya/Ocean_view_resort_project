@@ -6,8 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../utils/AuthContext';
 import { 
   Calendar as CalIcon, ConciergeBell, User, Home, Phone, Mail, Clock, 
-  TrendingUp, Users, Hotel, DollarSign, Search, ChevronRight, X, AlertCircle
+  TrendingUp, Users, Hotel, DollarSign, Search, ChevronRight, X, AlertCircle, 
+  Info, Check, Trash2, Mail as MailIcon, CreditCard
 } from 'lucide-react';
+import logo from '../../assets/logo.png';
 import axios from 'axios';
 import StaffSidebar from '../../components/staff/StaffSidebar';
 import StaffHeader from '../../components/staff/StaffHeader';
@@ -149,7 +151,7 @@ const StaffDashboard = () => {
                         {/* Stats Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
                             {[
-                                { label: 'Total Revenue', value: stats ? `$${stats.totalRevenue.toLocaleString()}` : '...', icon: DollarSign, color: 'text-green-500' },
+                                { label: 'Total Revenue', value: stats ? `LKR ${stats.totalRevenue.toLocaleString()}` : '...', icon: DollarSign, color: 'text-green-500' },
                                 { label: 'Active Bookings', value: stats ? stats.totalBookings : '...', icon: CalIcon, color: 'text-luxury-gold' },
                                 { label: 'Total Guests', value: allUsers?.length || 0, icon: Users, color: 'text-blue-500' },
                                 { label: 'Total Rooms', value: stats ? stats.totalRooms : '...', icon: Hotel, color: 'text-purple-500' },
@@ -177,56 +179,7 @@ const StaffDashboard = () => {
                             ))}
                         </div>
 
-                        {/* Middle Row: Analytics Grid Mapping Admin Style */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-2 bg-white dark:bg-luxury-charcoal/20 p-8 rounded-sm shadow-xl border border-black/5 dark:border-white/5">
-                                <div className="flex justify-between items-center mb-8">
-                                    <h3 className="text-xl font-serif text-luxury-charcoal dark:text-white">Revenue Overview</h3>
-                                    <TrendingUp className="text-luxury-gold" size={20} />
-                                </div>
-                                <div className="h-64 flex items-end justify-between space-x-2">
-                                    {Object.entries(stats?.revenueByMonth || {}).map(([month, val], i) => (
-                                        <div key={i} className="flex-1 flex flex-col items-center group">
-                                            <div className="w-full bg-luxury-gold/10 group-hover:bg-luxury-gold/30 transition-all relative rounded-t-sm" style={{ height: `${(val / (stats.totalRevenue || 1)) * 100}%`, minHeight: '10%' }}>
-                                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-luxury-charcoal text-white text-[8px] px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">${val}</div>
-                                            </div>
-                                            <span className="text-[10px] mt-4 font-bold text-gray-400 uppercase tracking-widest">{month}</span>
-                                        </div>
-                                    ))}
-                                    {Object.keys(stats?.revenueByMonth || {}).length === 0 && (
-                                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs italic">No financial data available.</div>
-                                    )}
-                                </div>
-                            </div>
-                            
-                            <div className="bg-luxury-dark text-white p-10 rounded-sm shadow-2xl relative overflow-hidden group">
-                                <div className="absolute top-[-20%] right-[-20%] w-60 h-60 bg-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-                                <h2 className="text-2xl font-serif mb-8 relative z-10 tracking-widest leading-none">Ops Intelligence</h2>
-                                <div className="space-y-6 relative z-10 font-sans">
-                                    {[
-                                        { label: 'Room Cleanup Service', value: 'High Priority', color: 'bg-green-500' },
-                                        { label: 'Kitchen Readiness', value: 'Operational', color: 'bg-luxury-gold' },
-                                        { label: 'Concierge Capacity', value: 'Optimal', color: 'bg-blue-500' }
-                                    ].map((item, idx) => (
-                                        <div key={idx}>
-                                            <div className="flex justify-between text-[10px] uppercase tracking-widest font-bold mb-3">
-                                                <span className="text-white/60">{item.label}</span>
-                                                <span className="text-white">{item.value}</span>
-                                            </div>
-                                            <div className="h-[2px] w-full bg-white/10 rounded-full overflow-hidden">
-                                                <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} className={`h-full ${item.color}`} />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="mt-10 pt-8 border-t border-white/5 relative z-10">
-                                    <button className="flex items-center space-x-2 text-luxury-gold hover:text-white transition-colors text-[10px] uppercase font-bold tracking-widest">
-                                        <span>View System Logs</span>
-                                        <ChevronRight size={14} />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                  
                     </div>
                 )}
 
@@ -266,7 +219,7 @@ const StaffDashboard = () => {
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold" size={18} />
                                 <input 
                                     type="text" 
-                                    placeholder="Executive Guest Search..." 
+                                    placeholder="Guest Search..." 
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full bg-luxury-dark/5 dark:bg-white/5 border border-black/5 dark:border-white/5 outline-none pl-14 pr-6 py-3 text-sm text-luxury-charcoal dark:text-white focus:border-luxury-gold transition-all"
@@ -283,11 +236,11 @@ const StaffDashboard = () => {
                                 <table className="w-full text-left font-sans">
                                     <thead>
                                         <tr className="bg-luxury-dark/5 dark:bg-white/5 text-[10px] uppercase tracking-[0.3em] text-luxury-charcoal/40 dark:text-white/40 border-b border-black/5 dark:border-white/5">
-                                            <th className="p-8">Identification</th>
+                                            <th className="p-8">Name</th>
                                             <th className="p-8">System ID</th>
-                                            <th className="p-8">Email Credential</th>
+                                            <th className="p-8">Email </th>
                                             <th className="p-8">Member Since</th>
-                                            <th className="p-8 text-right">Account Status</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-black/5 dark:divide-white/5">
@@ -309,9 +262,7 @@ const StaffDashboard = () => {
                                                     </div>
                                                 </td>
                                                 <td className="p-8 text-[11px] uppercase tracking-widest text-luxury-charcoal/40 dark:text-white/40">{u.createdAt ? moment(u.createdAt).format('LL') : 'Legacy Member'}</td>
-                                                <td className="p-8 text-right">
-                                                    <span className="px-4 py-1.5 bg-green-500/10 text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-full border border-green-500/20">Active</span>
-                                                </td>
+                                               
                                             </tr>
                                         ))}
                                     </tbody>
@@ -335,50 +286,138 @@ const StaffDashboard = () => {
         {isModalOpen && selectedEvent && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
             <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white dark:bg-luxury-charcoal w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-sm shadow-2xl flex flex-col md:flex-row border border-luxury-gold/20"
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white dark:bg-luxury-charcoal w-full max-w-5xl max-h-[95vh] overflow-y-auto rounded-sm shadow-2xl flex flex-col md:flex-row border border-luxury-gold/20"
             >
-                <div className="md:w-1/3 bg-luxury-dark relative min-h-[250px] md:min-h-full">
-                    <img 
-                      src={roomDetails?.image1 ? `http://localhost:8080${roomDetails.image1}` : "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=800"} 
-                      className="absolute inset-0 w-full h-full object-cover opacity-60"
-                      alt="Room"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-transparent to-transparent"></div>
-                    <div className="absolute bottom-6 left-6 text-white p-4">
-                        <span className="px-3 py-1 bg-luxury-gold text-white text-[10px] uppercase font-bold tracking-widest rounded-full mb-4 inline-block">
-                            {selectedEvent.status || 'Active'}
-                        </span>
-                        <h2 className="text-4xl font-serif mb-2 leading-none">Room {roomDetails?.roomNumber || '...'}</h2>
-                        <p className="text-luxury-gold text-xs font-bold uppercase tracking-[0.2em]">{roomDetails?.categoryName || 'Luxury Suite'}</p>
-                    </div>
-                </div>
-                <div className="flex-1 p-8 md:p-14 relative">
-                    <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 text-luxury-charcoal/20 dark:text-white/20 hover:text-red-500 transition-colors"><X size={32} /></button>
-                    
-                    <div className="mb-14">
-                        <p className="text-[10px] text-luxury-gold uppercase tracking-[0.4em] font-bold mb-2">Reservation ID</p>
-                        <h3 className="text-2xl font-mono font-bold text-luxury-charcoal dark:text-white tracking-widest">{selectedEvent.reservationNumber}</h3>
+                {/* Left Summary Sidebar - View Only */}
+                <div className="w-full md:w-72 bg-luxury-dark text-white p-6 flex flex-col border-r border-white/5 shadow-2xl shrink-0">
+                    <div className="mb-8 text-center">
+                        <img src={logo} alt="Resort Logo" className="w-16 mx-auto mb-4"/>
+                        <h2 className="text-lg font-serif text-luxury-gold tracking-[0.2em] uppercase">Reservation</h2>
+                        <p className="text-[8px] text-white/40 uppercase tracking-[0.3em] mt-1 italic">Read-Only Mode</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <div>
-                            <div className="flex items-center space-x-3 text-luxury-gold mb-6 pb-2 border-b border-luxury-gold/10"><User size={20} /><h4 className="text-[10px] uppercase font-bold tracking-[0.3em]">Guest Identity</h4></div>
-                            <div className="space-y-6">
-                                <div><p className="text-2xl font-serif text-charcoal dark:text-white">{guestDetails?.name || 'Contacting...'}</p><p className="text-[10px] uppercase tracking-widest text-gray-400 mt-1">Verified Member</p></div>
-                                <div className="space-y-3">
-                                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-white/60"><Phone size={16} className="text-luxury-gold" /><span>{guestDetails?.contactNumber}</span></div>
-                                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-white/60"><Mail size={16} className="text-luxury-gold" /><span className="truncate">{guestDetails?.email}</span></div>
-                                </div>
+                    <div className="flex-1 space-y-6">
+                        <div className="bg-white/5 p-3 rounded-sm border border-white/10">
+                            <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Confirmation</p>
+                            <p className="font-mono text-base text-luxury-gold tracking-tighter">{selectedEvent.reservationNumber}</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-white/5 p-2 rounded-sm border border-white/10 text-center">
+                                <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Booking</p>
+                                <span className={`text-[9px] font-bold uppercase ${
+                                    selectedEvent.status === 'confirmed' ? 'text-green-400' : 
+                                    selectedEvent.status === 'cancelled' ? 'text-red-400' : 'text-yellow-400'
+                                }`}>
+                                    {selectedEvent.status}
+                                </span>
+                            </div>
+                            <div className="bg-white/5 p-2 rounded-sm border border-white/10 text-center">
+                                <p className="text-white/40 uppercase text-[8px] tracking-widest font-bold mb-1">Payment</p>
+                                <span className={`text-[9px] font-bold uppercase ${
+                                    selectedEvent.paymentStatus === 'paid' ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                    {selectedEvent.paymentStatus}
+                                </span>
                             </div>
                         </div>
-                        <div>
-                            <div className="flex items-center space-x-3 text-luxury-gold mb-6 pb-2 border-b border-luxury-gold/10"><Home size={20} /><h4 className="text-[10px] uppercase font-bold tracking-[0.3em]">Operational Task</h4></div>
-                            <div className="bg-luxury-cream dark:bg-white/5 p-6 border-l-2 border-luxury-gold mb-6">
-                                <p className="text-[10px] uppercase font-bold text-luxury-gold mb-2">Service Note</p>
-                                <p className="text-xs italic leading-relaxed text-luxury-charcoal/70 dark:text-white/70">{roomDetails?.amenities || 'Executive room preparation required.'}</p>
+
+                        <div className="pt-4 border-t border-white/5 space-y-3">
+                            <div className="flex items-center space-x-3">
+                                <CalIcon size={12} className="text-luxury-gold"/>
+                                <p className="text-xs font-serif">{moment(selectedEvent.checkInDate).format('MMM DD')} - {moment(selectedEvent.checkOutDate).format('MMM DD, YYYY')}</p>
+                            </div>
+                            <div className="flex items-center space-x-3">
+
+                                <p className="text-lg font-serif text-luxury-gold">LKR {selectedEvent.totalCost}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t border-white/5">
+                        <div className="flex items-center space-x-2 opacity-30">
+                            <AlertCircle size={10} />
+                            <p className="text-[8px] uppercase font-bold tracking-widest leading-none">Administrative control restricted</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Detailed Area */}
+                <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-luxury-charcoal">
+                    <div className="px-8 py-4 flex justify-between items-center bg-luxury-cream/10 dark:bg-black/10 border-b border-black/5 dark:border-white/5">
+                        <h3 className="text-base font-serif tracking-widest uppercase text-luxury-charcoal dark:text-white">Dossier Details</h3>
+                        <button onClick={() => setIsModalOpen(false)} className="p-1.5 hover:bg-red-500/10 hover:text-red-500 rounded-full transition-all text-luxury-charcoal/30 dark:text-white/20"><X size={18}/></button>
+                    </div>
+
+                    <div className="flex-1 overflow-hidden p-6 space-y-6">
+                        <div className="grid grid-cols-2 gap-6">
+                            {/* Guest Details */}
+                            <div className="space-y-3">
+                                <div className="flex items-center space-x-2 text-luxury-gold">
+                                    <Users size={14}/>
+                                    <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Guest Profile</h4>
+                                </div>
+                                {guestDetails ? (
+                                    <div className="bg-luxury-cream/20 dark:bg-black/20 p-4 rounded-sm border border-black/5 dark:border-white/5 text-[11px]">
+                                        <p className="font-serif text-base text-luxury-charcoal dark:text-white mb-2">{guestDetails.name}</p>
+                                        <div className="space-y-1 text-black/60 dark:text-white/60">
+                                            <p><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">Contact:</span> {guestDetails.contactNumber}</p>
+                                            <p><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">NIC:</span> {guestDetails.nicNumber || 'N/A'}</p>
+                                            <p className="truncate"><span className="text-[8px] uppercase tracking-tighter opacity-50 mr-2">Address:</span> {guestDetails.address || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="h-24 bg-black/5 animate-pulse rounded-sm"></div>
+                                )}
+                            </div>
+
+                            {/* Suite Details */}
+                            <div className="space-y-3">
+                                <div className="flex items-center space-x-2 text-luxury-gold">
+                                    <Hotel size={14}/>
+                                    <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Suite Allocation</h4>
+                                </div>
+                                {roomDetails ? (
+                                    <div className="bg-luxury-cream/20 dark:bg-black/20 p-4 rounded-sm border border-black/5 dark:border-white/5 text-[11px]">
+                                        <p className="font-serif text-2xl text-luxury-gold mb-1">#{roomDetails.roomNumber}</p>
+                                        <div className="space-y-1 text-black/60 dark:text-white/60">
+                                            <p className="font-bold uppercase text-[9px]">{roomDetails.bedType}</p>
+                                            <div className="flex justify-between">
+                                                <span>{roomDetails.ac ? 'AC' : 'Non-AC'}</span>
+                                                <span className="opacity-50">LKR {roomDetails.ratePerNight}/Night</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="h-24 bg-black/5 animate-pulse rounded-sm"></div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* System Info / Metadata Section */}
+                        <div className="space-y-3 pt-4 border-t border-black/5 dark:border-white/5">
+                            <div className="flex items-center space-x-2 text-luxury-gold">
+                                <Info size={14}/>
+                                <h4 className="text-[9px] font-bold uppercase tracking-[0.2em]">Intelligence & Records</h4>
+                            </div>
+                            <div className="p-3 bg-luxury-cream/10 dark:bg-white/5 rounded-sm border border-black/5 dark:border-white/5">
+                                <div className="space-y-1.5 text-[10px]">
+                                    <div className="flex justify-between">
+                                        <span className="opacity-40 uppercase text-[8px]">Created At</span>
+                                        <span className="text-luxury-charcoal dark:text-white font-mono">{moment(selectedEvent.createdAt).format('YYYY-MM-DD HH:mm')}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="opacity-40 uppercase text-[8px]">Last System Update</span>
+                                        <span className="text-luxury-charcoal dark:text-white font-mono">{moment(selectedEvent.updatedAt).format('YYYY-MM-DD HH:mm')}</span>
+                                    </div>
+                                    <div className="pt-2 mt-1 border-t border-black/5 dark:border-white/5">
+                                        <p className="text-[8px] uppercase tracking-tighter opacity-40 mb-1">Operational Notes</p>
+                                        <p className="text-luxury-charcoal/80 dark:text-white/80 italic leading-relaxed text-[10px]">{selectedEvent.notes || "Standard Booking - No specific preparation instructions logged."}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
