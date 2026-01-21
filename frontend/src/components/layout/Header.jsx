@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User as UserIcon, LogIn, LogOut, LayoutDashboard } from "lucide-react";
@@ -55,11 +56,7 @@ const Header = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-2"
           >
-            <div className="w-10 h-10 border-2 border-luxury-gold flex items-center justify-center transform rotate-45">
-              <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-xl">
-                O
-              </span>
-            </div>
+            <img src={logo} alt="Ocean View Logo" className="w-12 h-12 object-contain" />
             <div className="flex flex-col">
               <span className="text-luxury-charcoal dark:text-white font-serif font-bold tracking-widest text-lg leading-tight uppercase">
                 Ocean View

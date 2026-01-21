@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from "../../assets/logo.png";
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
 
@@ -12,9 +13,7 @@ const Footer = () => {
         {/* Brand Section */}
         <div className="space-y-6">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 border border-luxury-gold flex items-center justify-center transform rotate-45">
-              <span className="transform -rotate-45 text-luxury-gold font-serif font-bold text-lg">O</span>
-            </div>
+            <img src={logo} alt="Ocean View Logo" className="w-10 h-10 object-contain" />
             <span className="text-luxury-charcoal dark:text-white font-serif font-bold tracking-[0.2em] text-lg uppercase">Ocean View</span>
           </div>
           <p className="text-luxury-charcoal/50 dark:text-white/50 font-sans text-sm leading-relaxed">
