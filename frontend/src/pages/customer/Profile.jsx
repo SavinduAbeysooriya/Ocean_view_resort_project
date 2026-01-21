@@ -345,7 +345,7 @@ const Profile = () => {
                           {new Date(res.checkOutDate).toLocaleDateString()}
                         </td>
                         <td className="py-4 text-sm font-bold text-luxury-gold">
-                          ${res.totalCost}
+                          LKR {res.totalCost}
                         </td>
                         <td className="py-4">
                           <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${getStatusColor(res.status)}`}>

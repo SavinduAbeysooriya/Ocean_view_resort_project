@@ -766,7 +766,7 @@ const AdminRooms = () => {
                             <p className="text-3xl font-serif text-luxury-charcoal dark:text-white">
                               LKR {selectedRoom.ratePerNight}{" "}
                               <span className="text-sm font-sans text-luxury-charcoal/30 uppercase tracking-widest">
-                                USD
+                                LKR
                               </span>
                             </p>
                           </div>

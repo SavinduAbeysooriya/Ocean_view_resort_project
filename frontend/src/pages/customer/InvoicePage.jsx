@@ -201,13 +201,13 @@ const InvoicePage = () => {
                                 </p>
                             </td>
                             <td className="py-6 text-right font-mono text-sm">
-                                {invoice.currency} {(invoice.amount / (nights || 1)).toFixed(2)}
+                                LKR {(invoice.amount / (nights || 1)).toFixed(2)}
                             </td>
                             <td className="py-6 text-center text-sm font-medium">
                                 {nights} Night{nights > 1 ? 's' : ''}
                             </td>
                             <td className="py-6 text-right font-mono font-bold">
-                                {invoice.currency} {invoice.amount.toFixed(2)}
+                                LKR {invoice.amount.toFixed(2)}
                             </td>
                         </tr>
                     </tbody>
@@ -218,19 +218,19 @@ const InvoicePage = () => {
                     <div className="w-full max-w-[250px] space-y-3">
                         <div className="flex justify-between text-sm py-2">
                             <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Subtotal</span>
-                            <span className="font-mono">{invoice.currency} {invoice.subtotal?.toFixed(2) || invoice.amount.toFixed(2)}</span>
+                            <span className="font-mono">LKR {invoice.subtotal?.toFixed(2) || invoice.amount.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-sm py-2">
-                            <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Taxes (SC 10%)</span>
-                            <span className="font-mono">{invoice.currency} {invoice.taxAmount?.toFixed(2) || '0.00'}</span>
+                            <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Taxes (0%)</span>
+                            <span className="font-mono">LKR {invoice.taxAmount?.toFixed(2) || '0.00'}</span>
                         </div>
                         <div className="flex justify-between items-center py-4 border-t-2 border-black">
                             <span className="uppercase tracking-[0.2em] font-bold">Total Amount</span>
-                            <span className="text-2xl font-serif font-bold text-luxury-gold">{invoice.currency} {invoice.amount.toFixed(2)}</span>
+                            <span className="text-2xl font-serif font-bold text-luxury-gold">LKR {invoice.amount.toFixed(2)}</span>
                         </div>
                         <div className="bg-gray-50 p-4 rounded-sm border-l-4 border-green-500 flex justify-between items-center">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Amount Paid</span>
-                            <span className="font-mono font-bold text-green-600">-{invoice.currency} {invoice.amount.toFixed(2)}</span>
+                            <span className="font-mono font-bold text-green-600">-LKR {invoice.amount.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
