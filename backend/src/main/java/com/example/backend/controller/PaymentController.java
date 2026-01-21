@@ -34,13 +34,27 @@ public class PaymentController {
         BigDecimal amount = new BigDecimal(payload.get("amount").toString());
         String currency = (String) payload.get("currency");
 
+        return processPayment(reservationId, payhereId, amount, currency, "payhere");
+    }
+
+    @PostMapping
+    public ResponseEntity<?> recordPayment(@RequestBody Map<String, Object> payload) {
+        String reservationId = (String) payload.get("reservationId");
+        String payhereId = (String) payload.get("payhereId");
+        BigDecimal amount = new BigDecimal(payload.get("amount").toString());
+        String method = (String) payload.get("paymentMethod");
+
+        return processPayment(reservationId, payhereId, amount, "LKR", method);
+    }
+
+    private ResponseEntity<?> processPayment(String reservationId, String payhereId, BigDecimal amount, String currency, String method) {
         // 1. Create Payment Record
         Payment payment = new Payment();
         payment.setReservationId(reservationId);
         payment.setPayhereId(payhereId);
         payment.setAmount(amount);
-        payment.setCurrency(currency);
-        payment.setMethod("payhere");
+        payment.setCurrency(currency != null ? currency : "LKR");
+        payment.setMethod(method != null ? method : "manual");
         payment.setStatus(com.example.backend.model.enums.PaymentStatus.paid);
         payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
@@ -56,7 +70,7 @@ public class PaymentController {
             invoice.setReservationId(reservationId);
             invoice.setAmount(amount);
             invoice.setSubtotal(amount);
-            invoice.setCurrency(currency);
+            invoice.setCurrency(currency != null ? currency : "LKR");
             invoice.setStatus(com.example.backend.model.enums.InvoiceStatus.paid);
             invoice.setIssueDate(LocalDateTime.now());
             if (invoice.getInvoiceNumber() == null) {
@@ -68,6 +82,6 @@ public class PaymentController {
             System.err.println("Failed to update reservation/invoice after payment: " + e.getMessage());
         }
 
-        return ResponseEntity.ok(Map.of("message", "Payment recorded successfully"));
+        return ResponseEntity.ok(Map.of("message", "Payment recorded successfully", "payment", payment));
     }
 }

@@ -9,4 +9,5 @@ public interface InvoiceService {
     Optional<Invoice> getInvoiceById(String id);
     Invoice createInvoice(Invoice invoice);
     Optional<Invoice> getInvoiceByReservationId(String reservationId);
+    void sendInvoice(String invoiceId);
 }
