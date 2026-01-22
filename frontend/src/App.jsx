@@ -24,6 +24,9 @@ import AdminUsers from './pages/admin/Users';
 import StaffDashboard from './pages/staff/StaffDashboard';
 import Profile from './pages/customer/Profile';
 import InvoicePage from './pages/customer/InvoicePage';
+import Help from './pages/Help';
+import AdminHelp from './pages/admin/AdminHelp';
+import StaffHelp from './pages/staff/StaffHelp';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import ScrollToTop from './components/utils/ScrollToTop';
 
@@ -45,6 +48,7 @@ const App = () => {
                         <Route path="/login" element={<Layout><Login /></Layout>} />
                         <Route path="/register" element={<Layout><Register /></Layout>} />
                         <Route path="/about" element={<Layout><About /></Layout>} />
+                        <Route path="/help" element={<Layout><Help /></Layout>} />
                         <Route path="/faq" element={<Layout><FAQ /></Layout>} />
                         <Route path="/privacy-policy" element={<Layout><PrivacyPolicy /></Layout>} />
                         <Route path="/terms-of-service" element={<Layout><TermsOfService /></Layout>} />
@@ -58,11 +62,13 @@ const App = () => {
                             <Route path="/admin/rooms" element={<AdminRooms />} />
                             <Route path="/admin/reservations" element={<AdminReservations />} />
                             <Route path="/admin/users" element={<AdminUsers />} />
+                            <Route path="/admin/help" element={<AdminHelp />} />
                         </Route>
 
                         {/* Staff Routes */}
                         <Route element={<ProtectedRoute allowedRoles={['ROLE_STAFF']} />}>
                             <Route path="/staff/dashboard" element={<StaffDashboard />} />
+                            <Route path="/staff/help" element={<StaffHelp />} />
                         </Route>
 
                         {/* Customer Routes */}

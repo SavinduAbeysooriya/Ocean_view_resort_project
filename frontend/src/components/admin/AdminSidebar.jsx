@@ -118,8 +118,8 @@ const AdminSidebar = () => {
           ))}
         </nav>
 
-        {/* Logout */}
-        <div className="pt-8 border-t border-gray-200 dark:border-white/5">
+        {/* Bottom Actions */}
+        <div className="pt-8 border-t border-gray-200 dark:border-white/5 space-y-2">
           <button
             onClick={logout}
             className="w-full flex items-center space-x-4 p-4 text-red-500 dark:text-red-400/60 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-400/5 rounded-sm transition-all duration-300 group"
