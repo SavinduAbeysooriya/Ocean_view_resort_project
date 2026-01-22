@@ -25,6 +25,7 @@ import StaffDashboard from './pages/staff/StaffDashboard';
 import Profile from './pages/customer/Profile';
 import InvoicePage from './pages/customer/InvoicePage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import ScrollToTop from './components/utils/ScrollToTop';
 
 const GOOGLE_CLIENT_ID = "707866377438-20640dlhedfh63fu8iqot6n8394vp9mo.apps.googleusercontent.com";
 
@@ -32,6 +33,7 @@ const App = () => {
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <Router>
+                <ScrollToTop />
                 <AuthProvider>
                     <Routes>
                         {/* Public Routes with Main Layout */}

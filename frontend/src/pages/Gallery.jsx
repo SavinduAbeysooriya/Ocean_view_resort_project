@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import galleryHeader from '../assets/gallery_header.jpg';
 import axios from 'axios';
 import { Maximize2, Camera, Compass } from 'lucide-react';
+
 
 const Gallery = () => {
     const navigate = useNavigate();
@@ -36,20 +38,38 @@ const Gallery = () => {
     }
 
     return (
-        <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500 py-24">
+        <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500">
+            {/* Page Header Component */}
+            <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-20">
+                <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
+                   <div 
+                                       className="absolute inset-0 bg-cover bg-center"
+                                       style={{ backgroundImage: `url(${galleryHeader})` }}
+                                   ></div>
+                <div className="relative z-20 text-center px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+                            The Visual Experience
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+                            Resort Gallery
+                        </h1>
+                    </motion.div>
+                </div>
+            </section>
+
             <div className="max-w-7xl mx-auto px-6">
-                {/* Header */}
+                {/* Header Description */}
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
                     className="text-center mb-16"
                 >
-                    <div className="flex items-center justify-center space-x-3 text-xs uppercase tracking-[0.4em] text-luxury-gold mb-4">
-                        <span className="w-12 h-[1px] bg-luxury-gold/30"></span>
-                        <span>The Visual Experience</span>
-                        <span className="w-12 h-[1px] bg-luxury-gold/30"></span>
-                    </div>
-                    <h1 className="text-5xl font-serif text-charcoal dark:text-white mb-4">Our Resort Gallery</h1>
+                    <h2 className="text-4xl font-serif text-charcoal dark:text-white mb-4">Explore Our Sanctuary</h2>
                     <p className="text-gray-500 dark:text-white/40 max-w-2xl mx-auto font-light">
                         Explore our world-class accommodations through our visual catalog. Each room is a masterpiece of design and comfort.
                     </p>
