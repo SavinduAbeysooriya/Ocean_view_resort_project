@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import faqHeader from '../assets/faq_header.jpg';
 import { Plus, Minus, HelpCircle, Calendar, CreditCard, Ship, Plane, Coffee } from 'lucide-react';
+
 
 const FAQItem = ({ question, answer, icon: Icon, isOpen, onClick }) => {
   return (
@@ -43,6 +46,7 @@ const FAQItem = ({ question, answer, icon: Icon, isOpen, onClick }) => {
 };
 
 const FAQ = () => {
+  const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
@@ -79,24 +83,39 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="bg-luxury-cream dark:bg-luxury-dark min-h-screen pt-32 pb-24 transition-colors duration-300">
+    <div className="bg-luxury-cream dark:bg-luxury-dark min-h-screen transition-colors duration-300">
+      {/* Page Header Component */}
+      <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-20">
+        <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
+         <div 
+                          className="absolute inset-0 bg-cover bg-center"
+                          style={{ backgroundImage: `url(${faqHeader})` }}
+                      ></div>
+        <div className="relative z-20 text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+              Support Center
+            </span>
+            <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+              FAQ
+            </h1>
+          </motion.div>
+        </div>
+      </section>
+
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block"
-          >
-            Support Center
-          </motion.span>
-          <motion.h1 
+          <motion.h2 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-serif text-luxury-charcoal dark:text-white mb-6"
+            className="text-4xl md:text-5xl font-serif text-luxury-charcoal dark:text-white mb-6"
           >
-            Frequently Asked <br /> Questions
-          </motion.h1>
+            Frequently Asked Questions
+          </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -128,10 +147,12 @@ const FAQ = () => {
             <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/contact', { state: { subject: 'Concierge Inquiry' } })}
                 className="px-10 py-4 bg-luxury-gold text-white font-bold uppercase tracking-widest text-xs rounded-sm shadow-lg hover:bg-yellow-600 transition-all"
             >
                 Contact Our Concierge
             </motion.button>
+            <hr className="my-12 border-t border-black/5 dark:border-white/5" />
         </div>
       </div>
     </div>

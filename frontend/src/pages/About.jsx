@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { History, Award, Heart, ShieldCheck, Waves, Palmtree } from 'lucide-react';
+import aboutHeader from '../assets/about_header.jpg';
+import aboutBanner from '../assets/about_banner.jpg';
 
 const About = () => {
   const stats = [
@@ -23,43 +25,30 @@ const About = () => {
     }
   ];
 
-  return (
-    <div className="bg-luxury-cream dark:bg-luxury-dark min-h-screen pt-24 pb-20 transition-colors duration-300">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1544124499-58912cbddaad?auto=format&fit=crop&q=80&w=2000" 
-            alt="About Ocean View" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-luxury-dark/40 backdrop-blur-[2px]"></div>
-        </div>
-        <div className="relative h-full max-w-7xl mx-auto px-6 flex flex-col justify-center items-center text-center">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4"
-          >
-            Since 1995
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-serif text-white mb-6 leading-tight"
-          >
-            The Soul of <br /> Beachside Luxury
-          </motion.h1>
-          <motion.div 
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={{ opacity: 1, scaleX: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="w-24 h-1 bg-luxury-gold"
-          ></motion.div>
-        </div>
-      </section>
+  return ( <div>
+    {/* Page Header Component */}
+        <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-20">
+          <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
+           <div 
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url(${aboutHeader})` }}
+                        ></div>
+          <div className="relative z-20 text-center px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+                our journey
+              </span>
+              <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+                About us
+              </h1>
+            </motion.div>
+          </div>
+        </section>
 
+  <div className="bg-luxury-cream dark:bg-luxury-dark min-h-screen pt-24 pb-20 transition-colors duraton-300">
       {/* Our Mission */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -91,7 +80,7 @@ const About = () => {
           >
             <div className="aspect-[4/5] overflow-hidden rounded-sm shadow-2xl">
                 <img 
-                    src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&q=80&w=1000" 
+                    src={aboutBanner} 
                     alt="Legacy" 
                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                 />
@@ -149,7 +138,7 @@ const About = () => {
           </div>
         </div>
       </section>
-    </div>
+    </div>    </div>
   );
 };
 

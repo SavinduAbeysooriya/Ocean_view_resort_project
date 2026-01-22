@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Hero from '../components/ui/Hero';
+import CategoryDiscovery from '../components/ui/CategoryDiscovery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Hotel, Utensils, Umbrella, Users, ArrowRight, Star, Quote, ChevronLeft, ChevronRight, Phone, Mail, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -99,6 +100,11 @@ const Home = () => {
                     </motion.div>
                 </div>
             </section>
+
+
+
+            {/* Category Discovery Section */}
+            <CategoryDiscovery />
 
             {/* Latest Rooms Section */}
             <section className="py-24 bg-white/50 dark:bg-luxury-charcoal/10 backdrop-blur-sm">
@@ -232,9 +238,9 @@ const Home = () => {
                     {/* Free Review Widget (Embedded via typical free provider structure) */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
-                            { name: "John Smith", date: "2 days ago", text: "Truly a paradise on earth. The service at Ocean View Resort is unparalleled. Can't wait to return!" },
-                            { name: "Sarah Johnson", date: "1 week ago", text: "The views from the luxury suites are breathtaking. Every detail was perfectly executed. Truly 5 stars!" },
-                            { name: "Robert Wilson", date: "2 weeks ago", text: "The best vacation our family has ever had. The private beach is pristine and the food is world-class." }
+                            { name: "David Fernando", date: "2 days ago", text: "Truly a paradise on earth. The service at Ocean View Resort is unparalleled. Can't wait to return!" },
+                            { name: "Anjana Edirisinghe", date: "1 week ago", text: "The views from the luxury suites are breathtaking. Every detail was perfectly executed. Truly 5 stars!" },
+                            { name: "Savi Abeysooriya", date: "2 weeks ago", text: "The best vacation our family has ever had. The private beach is pristine and the food is world-class." }
                         ].map((review, i) => (
                             <motion.div 
                                 key={i}
@@ -286,7 +292,7 @@ const Home = () => {
                             </div>
                             <div className="flex items-center space-x-4">
                                 <MapPin className="text-luxury-gold" size={20} />
-                                <span className="text-sm opacity-60">Galle Road, Balapitiya</span>
+                                <span className="text-sm opacity-60">No. 78, Lighthouse Street, Galle Fort</span>
                             </div>
                         </div>
                     </div>

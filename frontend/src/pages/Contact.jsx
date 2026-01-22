@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { cn } from '../utils/cn';
+import contactHeader from '../assets/contact_header.jpg';
 
 const Contact = () => {
+    const location = useLocation();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         subject: '',
         message: ''
     });
+
+    useEffect(() => {
+        if (location.state?.subject) {
+            setFormData(prev => ({ ...prev, subject: location.state.subject }));
+        }
+    }, [location.state]);
+
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
 
@@ -44,24 +54,20 @@ const Contact = () => {
                 <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
                 <div 
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&q=80&w=2000')" }}
+                    style={{ backgroundImage: `url(${contactHeader})` }}
                 ></div>
                 <div className="relative z-20 text-center px-6">
-                    <motion.span 
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block"
-                    >
-                        Connected Hospitality
-                    </motion.span>
-                    <motion.h1 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl"
                     >
-                        Contact Us
-                    </motion.h1>
+                        <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+                            Connected Hospitality
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+                            Contact Us
+                        </h1>
+                    </motion.div>
                 </div>
             </section>
 
@@ -84,7 +90,7 @@ const Contact = () => {
 
                         <div className="space-y-10">
                             {[
-                                { icon: MapPin, title: 'Our Address', content: '123 Serenity Beach, Coastal Paradise, SL 12345' },
+                                { icon: MapPin, title: 'Our Address', content: 'No. 78, Lighthouse Street, Galle Fort, Galle, Sri Lanka' },
                                 { icon: Phone, title: 'Reservations', content: '+94 11 234 5678' },
                                 { icon: Mail, title: 'Email Enquiries', content: 'contact@oceanviewresort.com' }
                             ].map((item, idx) => (
@@ -202,7 +208,7 @@ const Contact = () => {
                 >
                     <iframe 
                         title="Resort Location"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126743.58289456743!2d79.8001243!3d6.9218386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae253d10f7a7003%3A0x320b2e4d32d3838d!2sColombo!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63479.14979031415!2d80.09325027465819!3d6.0703168028151495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae1774c44e8e5e1%3A0xc9ff45c13454ad4b!2sSea%20View%20Resort!5e0!3m2!1sen!2slk!4v1769066020108!5m2!1sen!2slk" 
                         width="100%" 
                         height="100%" 
                         style={{ border: 0, filter: 'grayscale(0.5) contrast(1.2) invert(0.05)' }} 
@@ -212,15 +218,7 @@ const Contact = () => {
                         className="dark:opacity-80 transition-opacity duration-500"
                     ></iframe>
                     
-                    {/* Floating Map Label */}
-                    <div className="absolute top-8 left-8 bg-white/90 dark:bg-luxury-dark/90 backdrop-blur-md p-6 border border-black/5 dark:border-white/5 shadow-2xl z-20 max-w-[200px]">
-                        <h4 className="text-luxury-gold font-serif font-bold text-lg mb-2">Visit Us</h4>
-                        <p className="text-luxury-charcoal/60 dark:text-white/60 text-xs font-sans leading-relaxed">
-                            123 Serenity Beach, <br />
-                            Coastal Paradise, <br />
-                            Colombo, Sri Lanka
-                        </p>
-                    </div>
+
                 </motion.div>
             </div>
         </div>
