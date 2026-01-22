@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../utils/AuthContext";
 import {
   LayoutDashboard,
@@ -8,22 +8,29 @@ import {
   LogOut,
   Menu,
   X,
+  HelpCircle
 } from "lucide-react";
 import logo from "../../assets/logo.png";
 
 const StaffSidebar = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Overview" },
-    { icon: Calendar, label: "Schedules" },
-    { icon: ConciergeBell, label: "Guest List" },
+    { icon: LayoutDashboard, label: "Overview", path: "/staff/dashboard" },
+    { icon: Calendar, label: "Schedules", path: "/staff/dashboard" },
+    { icon: ConciergeBell, label: "Guest List", path: "/staff/dashboard" },
+    { icon: HelpCircle, label: "Help", path: "/staff/help" },
   ];
 
-  const handleTabClick = (label) => {
-    setActiveTab(label);
+  const handleTabClick = (item) => {
+    if (location.pathname !== item.path) {
+        navigate(item.path);
+    } else {
+        setActiveTab(item.label);
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -70,7 +77,7 @@ const StaffSidebar = ({ activeTab, setActiveTab }) => {
           {menuItems.map((item, idx) => (
             <button
               key={idx}
-              onClick={() => handleTabClick(item.label)}
+              onClick={() => handleTabClick(item)}
               className={`
                 w-full flex items-center space-x-4 p-4 rounded-sm 
                 transition-all duration-300 group

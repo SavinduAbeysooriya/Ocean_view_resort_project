@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, HelpCircle } from 'lucide-react';
 
 const AdminHeader = ({ 
   subtitle = "Central Intelligence", 
@@ -9,6 +10,7 @@ const AdminHeader = ({
   actions = null 
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   );
@@ -57,6 +59,14 @@ const AdminHeader = ({
         
         {/* Dark Mode Toggle and User Info */}
         <div className="flex items-center space-x-6 bg-white/50 dark:bg-luxury-charcoal/30 p-2 rounded-full border border-black/5 dark:border-white/5 backdrop-blur-xl">
+           <button 
+                onClick={() => navigate('/admin/help')}
+                className="p-3 bg-white dark:bg-luxury-charcoal rounded-full shadow-lg text-luxury-gold hover:scale-110 transition-all duration-300"
+                aria-label="Admin Guide"
+                title="Admin Guide"
+            >
+                <HelpCircle size={20} />
+            </button>
           <button 
             onClick={toggleDarkMode}
             className="p-3 bg-white dark:bg-luxury-charcoal rounded-full shadow-lg text-luxury-gold hover:scale-110 transition-all duration-300"
