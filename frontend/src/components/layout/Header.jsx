@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User as UserIcon, LogIn, LogOut, LayoutDashboard } from "lucide-react";
 import { cn } from "../../utils/cn";
@@ -22,6 +22,34 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Pages that have a dark hero section at the top
+  const heroPages = ["/", "/about", "/rooms", "/gallery", "/faq", "/contact"];
+  const isHeroPage = heroPages.includes(location.pathname) || location.pathname.startsWith('/rooms/');
+
+  // Determine text color based on scroll state and page type
+  const getTextColor = (baseOpacity = "80") => {
+    if (isScrolled) {
+      return `text-luxury-charcoal/${baseOpacity} dark:text-white/${baseOpacity}`;
+    }
+    // If on a hero page and not scrolled, force white/gold text regardless of theme
+    if (isHeroPage) {
+      return `text-white/${baseOpacity}`;
+    }
+    // Fallback for non-hero pages at the top (like login/register)
+    return `text-luxury-charcoal/${baseOpacity} dark:text-white/${baseOpacity}`;
+  };
+
+  const getStrongTextColor = () => {
+    if (isScrolled) {
+      return "text-luxury-charcoal dark:text-white";
+    }
+    if (isHeroPage) {
+      return "text-white";
+    }
+    return "text-luxury-charcoal dark:text-white";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,7 +86,10 @@ const Header = () => {
           >
             <img src={logo} alt="Ocean View Logo" className="w-12 h-12 object-contain" />
             <div className="flex flex-col">
-              <span className="text-luxury-charcoal dark:text-white font-serif font-bold tracking-widest text-lg leading-tight uppercase">
+              <span className={cn(
+                "font-serif font-bold tracking-widest text-lg leading-tight uppercase transition-colors duration-300",
+                getStrongTextColor()
+              )}>
                 Ocean View
               </span>
               <span className="text-luxury-gold text-[10px] tracking-[0.3em] font-sans uppercase">
@@ -79,7 +110,10 @@ const Header = () => {
             >
               <Link
                 to={link.href}
-                className="text-luxury-charcoal/80 dark:text-white/80 hover:text-luxury-gold dark:hover:text-luxury-gold font-sans text-sm tracking-widest uppercase transition-colors relative group"
+                className={cn(
+                  "font-sans text-sm tracking-widest uppercase transition-colors relative group",
+                  getTextColor()
+                )}
               >
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-luxury-gold transition-all duration-300 group-hover:w-full"></span>
@@ -102,7 +136,10 @@ const Header = () => {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center space-x-2 px-4 py-2 text-luxury-gold hover:text-yellow-600 transition-colors text-sm font-sans tracking-widest uppercase"
+                      className={cn(
+                        "flex items-center space-x-2 px-4 py-2 hover:text-luxury-gold transition-colors text-sm font-sans tracking-widest uppercase",
+                        getStrongTextColor()
+                      )}
                     >
                       {dashLink.icon && React.createElement(dashLink.icon, { size: 18 })}
                       <span>{dashLink.name}</span>
@@ -112,14 +149,13 @@ const Header = () => {
               })()}
               
               <div className="flex items-center space-x-3 pl-4 border-l border-black/10 dark:border-white/10">
-                <img 
-                  src={`https://ui-avatars.com/api/?name=${user.username}&background=D4AF37&color=fff`} 
-                  className="w-8 h-8 rounded-full border border-luxury-gold" 
-                  alt="Avatar" 
-                />
+
                 <button 
                   onClick={logout}
-                  className="text-luxury-charcoal/60 dark:text-white/60 hover:text-red-500 transition-colors"
+                  className={cn(
+                    "hover:text-red-500 transition-colors",
+                    getTextColor("60")
+                  )}
                   title="Logout"
                 >
                   <LogOut size={18} />
@@ -132,7 +168,10 @@ const Header = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center space-x-2 px-4 py-2 text-luxury-charcoal/90 dark:text-white/90 hover:text-luxury-charcoal dark:hover:text-white transition-colors text-sm font-sans tracking-widest uppercase"
+                  className={cn(
+                    "flex items-center space-x-2 px-4 py-2 hover:text-luxury-gold dark:hover:text-white transition-colors text-sm font-sans tracking-widest uppercase",
+                    getStrongTextColor()
+                  )}
                 >
                   <LogIn size={18} className="text-luxury-gold" />
                   <span>Login</span>
@@ -158,7 +197,11 @@ const Header = () => {
           <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-luxury-charcoal dark:text-white hover:text-luxury-gold transition-colors"
+            className={cn(
+              "transition-colors",
+              getStrongTextColor(),
+              "hover:text-luxury-gold"
+            )}
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>

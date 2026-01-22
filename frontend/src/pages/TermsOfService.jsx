@@ -1,9 +1,33 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import tAndCHeader from '../assets/t_and_c_header.jpg';
+
 
 const TermsOfService = () => {
     return (
-        <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark pt-32 pb-20 selection:bg-luxury-gold selection:text-white">
+        <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500">
+            {/* Page Header Component */}
+            <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-20">
+                <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
+                  <div 
+                                        className="absolute inset-0 bg-cover bg-center"
+                                        style={{ backgroundImage: `url(${tAndCHeader})` }}
+                                    ></div>
+                <div className="relative z-20 text-center px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+                            Legal Terms
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+                            Terms of Service
+                        </h1>
+                    </motion.div>
+                </div>
+            </section>
+
             <div className="max-w-4xl mx-auto px-6">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -11,12 +35,6 @@ const TermsOfService = () => {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
-                    <div className="flex items-center justify-center space-x-3 text-[10px] uppercase font-bold tracking-[0.3em] text-luxury-gold mb-4">
-                        <span className="w-8 h-[1px] bg-luxury-gold/30"></span>
-                        <span>Legal Terms</span>
-                        <span className="w-8 h-[1px] bg-luxury-gold/30"></span>
-                    </div>
-                    <h1 className="text-5xl md:text-6xl font-serif text-luxury-charcoal dark:text-white mb-6">Terms of Service</h1>
                     <p className="text-luxury-charcoal/40 dark:text-white/40 italic font-sans">Last updated: January 21, 2026</p>
                 </motion.div>
 

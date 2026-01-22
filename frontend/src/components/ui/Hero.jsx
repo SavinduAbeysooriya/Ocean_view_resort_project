@@ -1,5 +1,9 @@
 import React, { useRef, useEffect } from 'react';
+
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import heroBg from '../../assets/hero_bg.jpg';
+
 
 const Hero = () => {
   const ref = useRef(null);
@@ -20,7 +24,10 @@ const Hero = () => {
         animate={{ scale: 1 }}
         transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
       >
-        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
+        <div 
+          className="w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        ></div>
       </motion.div>
 
       {/* Content */}
@@ -50,12 +57,18 @@ const Hero = () => {
           transition={{ delay: 1 }}
           className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8"
         >
-          <button className="px-10 py-5 bg-luxury-gold text-white font-bold uppercase tracking-widest text-xs hover:bg-yellow-600 transition-all rounded-sm shadow-2xl">
+          <Link 
+            to="/rooms" 
+            className="px-10 py-5 bg-luxury-gold text-white font-bold uppercase tracking-widest text-xs hover:bg-yellow-600 transition-all rounded-sm shadow-2xl text-center"
+          >
             Book Your Stay
-          </button>
-          <button className="px-10 py-5 border border-white/30 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all rounded-sm backdrop-blur-sm">
-            Explore Suites
-          </button>
+          </Link>
+          <Link 
+            to="/contact" 
+            className="px-10 py-5 border border-white/30 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all rounded-sm backdrop-blur-sm text-center"
+          >
+            Contact Us
+          </Link>
         </motion.div>
       </div>
 

@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import roomsHeader from '../assets/rooms_header.jpg';
 import axios from 'axios';
 import { 
   Search, Wind, Users, Bed, Calendar, Filter, X, 
   ChevronRight, Star, ArrowRight, Grid, List 
 } from 'lucide-react';
+import { cn } from "../utils/cn";
+
 
 const Rooms = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [rooms, setRooms] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -29,6 +33,10 @@ const Rooms = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // grid or list
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const roomsPerPage = 6;
 
   const API_URL = 'http://localhost:8080/api';
   const BASE_URL = 'http://localhost:8080';
@@ -38,8 +46,25 @@ const Rooms = () => {
   }, []);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const categoryId = searchParams.get('category');
+    if (categoryId) {
+      setSelectedCategory(categoryId);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     applyFilters();
+    setCurrentPage(1); // Reset to first page when filters change
   }, [rooms, selectedCategory, searchTerm, checkInDate, checkOutDate, filters]);
+
+  // Pagination logic
+  const indexOfLastRoom = currentPage * roomsPerPage;
+  const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+  const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+  const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const fetchData = async () => {
     try {
@@ -182,33 +207,34 @@ const Rooms = () => {
 
   return (
     <div className="min-h-screen bg-luxury-cream dark:bg-luxury-dark transition-colors duration-500">
-      {/* Header */}
-      <div className="bg-luxury-dark text-white py-20">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Page Header Component */}
+      <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-black/50 z-10 transition-colors duration-300 dark:bg-black/60"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${roomsHeader})` }}
+        ></div>
+        <div className="relative z-20 text-center px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
           >
-            <div className="flex items-center justify-center space-x-3 text-xs uppercase tracking-[0.3em] text-luxury-gold mb-4">
-              <span className="w-12 h-[1px] bg-luxury-gold/30"></span>
-              <span>Luxury Accommodations</span>
-              <span className="w-12 h-[1px] bg-luxury-gold/30"></span>
-            </div>
-            <h1 className="text-6xl font-serif mb-6">Our Rooms & Suites</h1>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
-              Discover your perfect sanctuary overlooking the ocean
-            </p>
+            <span className="text-luxury-gold tracking-[0.4em] uppercase text-xs font-bold mb-4 block">
+              Luxury Accommodations
+            </span>
+            <h1 className="text-5xl md:text-7xl font-serif text-white drop-shadow-2xl">
+              Our Rooms
+            </h1>
           </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* Search & Date Filter Bar */}
       <div className="bg-white dark:bg-luxury-charcoal shadow-xl -mt-10 relative z-10">
         <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             {/* Search */}
-            <div className="relative">
+            <div className="relative lg:col-span-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-luxury-gold" size={20} />
               <input
                 type="text"
@@ -246,10 +272,24 @@ const Rooms = () => {
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center justify-center space-x-2 bg-luxury-gold hover:bg-luxury-gold/90 text-white py-3 rounded-sm transition-all"
+              className={cn(
+                "flex items-center justify-center space-x-2 py-3 rounded-sm transition-all border-2",
+                showFilters 
+                  ? "bg-luxury-gold text-white border-luxury-gold" 
+                  : "bg-transparent text-luxury-gold border-luxury-gold hover:bg-luxury-gold hover:text-white"
+              )}
             >
               <Filter size={20} />
               <span className="text-sm font-bold uppercase tracking-widest">Filters</span>
+            </button>
+
+            {/* Reset Button - Outside */}
+            <button
+              onClick={resetFilters}
+              className="flex items-center justify-center space-x-2 py-3 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-white rounded-sm transition-all"
+            >
+              <X size={20} />
+              <span className="text-sm font-bold uppercase tracking-widest">Reset</span>
             </button>
           </div>
 
@@ -269,8 +309,8 @@ const Rooms = () => {
                       Air Conditioning
                     </label>
                     <select
-                      value={filters.ac === null ? '' : filters.ac.toString()}
-                      onChange={(e) => setFilters({...filters, ac: e.target.value === '' ? null : e.target.value === 'true'})}
+                      value={filters.ac === null ? "" : filters.ac.toString()}
+                      onChange={(e) => setFilters({...filters, ac: e.target.value === "" ? null : e.target.value === "true"})}
                       className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-sm bg-transparent text-luxury-charcoal dark:text-white"
                     >
                       <option value="">Any</option>
@@ -338,16 +378,6 @@ const Rooms = () => {
                       className="w-full px-4 py-2 border border-black/10 dark:border-white/10 rounded-sm bg-transparent text-luxury-charcoal dark:text-white"
                     />
                   </div>
-
-                  {/* Reset Button */}
-                  <div className="flex items-end">
-                    <button
-                      onClick={resetFilters}
-                      className="w-full px-4 py-2 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-white rounded-sm transition-all"
-                    >
-                      Reset Filters
-                    </button>
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -355,68 +385,67 @@ const Rooms = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content Layout with Sidebar */}
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar - Categories */}
-          <div className="lg:w-80 flex-shrink-0">
-            <div className="bg-white dark:bg-luxury-charcoal p-6 rounded-sm shadow-xl sticky top-6">
-              <h3 className="text-xl font-serif mb-6 text-luxury-charcoal dark:text-white">Categories</h3>
-              
-              <div className="space-y-3">
-                {/* All Rooms */}
-                <button
-                  onClick={() => setSelectedCategory('all')}
-                  className={`w-full text-left p-4 rounded-sm transition-all ${
-                    selectedCategory === 'all'
-                      ? 'bg-luxury-gold text-white'
-                      : 'hover:bg-luxury-gold/10 text-luxury-charcoal dark:text-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm uppercase tracking-widest">All Rooms</span>
-                    <ChevronRight size={16} />
-                  </div>
-                </button>
-
-                {/* Category with Images */}
-                {categories.map(category => (
+          <aside className="lg:w-80 flex-shrink-0">
+            <div className="sticky top-24 space-y-8">
+              <div>
+                <h3 className="text-xl font-serif text-charcoal dark:text-white mb-6 flex items-center gap-3">
+                  <Grid size={20} className="text-luxury-gold" />
+                  Categories
+                </h3>
+                
+                <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                  {/* All Rooms Card */}
                   <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id.toString())}
-                    className={`w-full text-left rounded-sm overflow-hidden transition-all ${
-                      selectedCategory === category.id.toString()
-                        ? 'ring-2 ring-luxury-gold'
-                        : 'hover:ring-2 hover:ring-luxury-gold/50'
+                    onClick={() => setSelectedCategory('all')}
+                    className={`group relative h-32 lg:h-40 rounded-sm overflow-hidden transition-all duration-500 shadow-lg ${
+                      selectedCategory === 'all' ? 'ring-2 ring-luxury-gold' : 'hover:scale-105'
                     }`}
                   >
-                    <div className="relative h-32">
+                    <div className="absolute inset-0 bg-luxury-dark/40 group-hover:bg-luxury-dark/20 transition-all"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                        <Grid className="text-white mb-2" size={28} />
+                        <span className="font-bold text-[10px] items-center uppercase tracking-widest text-white">All Rooms</span>
+                    </div>
+                  </button>
+
+                  {/* Dynamic Categories */}
+                  {categories.map(category => (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id.toString())}
+                      className={`group relative h-32 lg:h-40 rounded-sm overflow-hidden transition-all duration-500 shadow-lg ${
+                        selectedCategory === category.id.toString() ? 'ring-2 ring-luxury-gold' : 'hover:scale-105'
+                      }`}
+                    >
                       {category.categoryImage ? (
                         <img
                           src={`${BASE_URL}${category.categoryImage}`}
                           alt={category.category}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="w-full h-full bg-luxury-dark/10 flex items-center justify-center">
-                          <Bed className="text-luxury-gold" size={32} />
+                        <div className="w-full h-full bg-luxury-dark/20 flex items-center justify-center">
+                          <Bed className="text-luxury-gold/50" size={28} />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <p className="font-bold text-xs uppercase tracking-widest text-white">
+                        <p className="font-bold text-[10px] uppercase tracking-widest text-white line-clamp-1">
                           {category.category}
                         </p>
-                        <p className="text-xs text-white/60 line-clamp-1">{category.description}</p>
                       </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </aside>
 
-          {/* Rooms Grid */}
+          {/* Rooms Grid Section */}
           <div className="flex-1">
             {/* Results Header */}
             <div className="flex justify-between items-center mb-8">
@@ -479,8 +508,9 @@ const Rooms = () => {
                 )}
               </div>
             ) : (
+              <>
               <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-8' : 'space-y-6'}>
-                {filteredRooms.map((room, index) => (
+                {currentRooms.map((room, index) => (
                   <motion.div
                     key={room.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -568,6 +598,42 @@ const Rooms = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center space-x-2 mt-16">
+                  <button
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="p-3 rounded-full border border-black/10 dark:border-white/10 text-luxury-charcoal dark:text-white hover:bg-luxury-gold hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-current transition-all"
+                  >
+                    <ChevronRight size={20} className="rotate-180" />
+                  </button>
+                  
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => paginate(i + 1)}
+                      className={`w-12 h-12 rounded-full font-bold transition-all ${
+                        currentPage === i + 1
+                          ? 'bg-luxury-gold text-white shadow-lg'
+                          : 'border border-black/10 dark:border-white/10 text-luxury-charcoal dark:text-white hover:border-luxury-gold'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="p-3 rounded-full border border-black/10 dark:border-white/10 text-luxury-charcoal dark:text-white hover:bg-luxury-gold hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-current transition-all"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              )}
+              </>
             )}
           </div>
         </div>
