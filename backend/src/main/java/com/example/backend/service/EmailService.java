@@ -32,7 +32,8 @@ public class EmailService {
     }
 
     @Async
-    public void processContactEnquiry(String name, String email, String subject, String message, String adminHtml, String userHtml) {
+    public void processContactEnquiry
+    (String name, String email, String subject, String message, String adminHtml, String userHtml) {
         try {
             // 1. Send Admin Notification
             sendHtmlEmailInternal("admin@oceanviewresort.com", "New Contact: " + subject, adminHtml);
