@@ -17,3 +17,4 @@ public interface ReservationRepository extends MongoRepository<Reservation, Stri
            "{ 'checkInDate': { $lt: ?2 }, 'checkOutDate': { $gt: ?1 } } ] }")
     List<Reservation> findOverlappingReservations(String roomId, LocalDate checkIn, LocalDate checkOut);
 }
+
