@@ -13,6 +13,7 @@ import logo from '../../assets/logo.png';
 import axios from 'axios';
 import StaffSidebar from '../../components/staff/StaffSidebar';
 import StaffHeader from '../../components/staff/StaffHeader';
+import { API_URL } from '../../config/api';
 
 const localizer = momentLocalizer(moment);
 
@@ -32,8 +33,6 @@ const StaffDashboard = () => {
   const [stats, setStats] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const API_URL = 'http://localhost:8080/api';
 
   useEffect(() => {
     fetchAllData();

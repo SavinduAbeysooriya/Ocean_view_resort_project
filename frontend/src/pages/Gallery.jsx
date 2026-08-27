@@ -4,15 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import galleryHeader from '../assets/gallery_header.jpg';
 import axios from 'axios';
 import { Maximize2, Camera, Compass } from 'lucide-react';
-
+import { BASE_URL, API_URL } from '../config/api';
 
 const Gallery = () => {
     const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
-    
-    const API_URL = 'http://localhost:8080/api';
-    const BASE_URL = 'http://localhost:8080';
 
     useEffect(() => {
         fetchRooms();

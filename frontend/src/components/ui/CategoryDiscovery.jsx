@@ -3,15 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, Bed, ArrowRight } from 'lucide-react';
+import { BASE_URL, API_URL } from '../../config/api';
 
 const CategoryDiscovery = () => {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    
-    // For local dev - update this if needed
-    const BASE_URL = 'http://localhost:8080';
-    const API_URL = 'http://localhost:8080/api';
 
     // Carousel State
     const [currentIndex, setCurrentIndex] = useState(0);

@@ -11,6 +11,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
 } from 'recharts';
+import { API_URL as BASE_API_URL } from '../../config/api';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
   const [revenueData, setRevenueData] = useState([]);
   const [bookingStatusData, setBookingStatusData] = useState([]);
 
-  const API_URL = 'http://localhost:8080/api/dashboard/stats';
+  const API_URL = `${BASE_API_URL}/dashboard/stats`;
 
   useEffect(() => {
     fetchDashboardStats();

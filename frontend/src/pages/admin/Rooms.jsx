@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../utils/AuthContext";
+import { BASE_URL, API_URL as BASE_API_URL } from "../../config/api";
 
 import {
   LayoutDashboard,
@@ -63,9 +64,8 @@ const AdminRooms = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const API_URL = "http://localhost:8080/api/rooms";
-  const CAT_API_URL = "http://localhost:8080/api/room-categories";
-  const BASE_URL = "http://localhost:8080";
+  const API_URL = `${BASE_API_URL}/rooms`;
+  const CAT_API_URL = `${BASE_API_URL}/room-categories`;
 
   useEffect(() => {
     fetchData();

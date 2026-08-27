@@ -59,7 +59,7 @@ const Hero = () => {
         >
           <Link 
             to="/rooms" 
-            className="px-10 py-5 bg-luxury-gold text-white font-bold uppercase tracking-widest text-xs hover:bg-yellow-600 transition-all rounded-sm shadow-2xl text-center"
+            className="px-10 py-5 bg-yellow-600 text-white font-bold uppercase tracking-widest text-xs hover:bg-yellow-600 transition-all rounded-sm shadow-2xl text-center"
           >
             Book Your Stay
           </Link>

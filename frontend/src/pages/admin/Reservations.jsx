@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminHeader from '../../components/admin/AdminHeader';
 import { useNavigate } from 'react-router-dom';
+import { API_URL as BASE_API_URL } from '../../config/api';
 
 const localizer = momentLocalizer(moment);
 
@@ -34,9 +35,9 @@ const AdminReservations = () => {
     const [date, setDate] = useState(new Date());
     const [view, setView] = useState('month');
 
-    const API_URL = 'http://localhost:8080/api/reservations';
-    const PAYMENT_API_URL = 'http://localhost:8080/api/payments';
-    const INVOICE_API_URL = 'http://localhost:8080/api/invoices';
+    const API_URL = `${BASE_API_URL}/reservations`;
+    const PAYMENT_API_URL = `${BASE_API_URL}/payments`;
+    const INVOICE_API_URL = `${BASE_API_URL}/invoices`;
 
     useEffect(() => {
         fetchReservations();
@@ -88,7 +89,7 @@ const AdminReservations = () => {
     const fetchGuestDetails = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:8080/api/guests/${id}`, {
+            const response = await axios.get(`${BASE_API_URL}/guests/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setGuestDetails(response.data);
@@ -102,7 +103,7 @@ const AdminReservations = () => {
         try {
             // Room API might be public or protected, assuming protected
             const token = localStorage.getItem('token'); 
-            const response = await axios.get(`http://localhost:8080/api/rooms/${id}`, {
+            const response = await axios.get(`${BASE_API_URL}/rooms/${id}`, {
                  headers: { Authorization: `Bearer ${token}` } // Include token just in case
             });
             setRoomDetails(response.data);
