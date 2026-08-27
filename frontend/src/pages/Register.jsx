@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../utils/AuthContext';
+import { API_URL } from '../config/api';
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -40,7 +41,7 @@ const Register = () => {
     setStatus({ type: '', message: '' });
 
     try {
-      await axios.post('http://localhost:8080/api/auth/signup', {
+      await axios.post(`${API_URL}/auth/signup`, {
         username: formData.username,
         email: formData.email,
         password: formData.password
@@ -62,7 +63,7 @@ const Register = () => {
     setStatus({ type: '', message: '' });
     try {
       console.log('Attempting Google signup...');
-      const response = await axios.post("http://localhost:8080/api/auth/google", {
+      const response = await axios.post(`${API_URL}/auth/google`, {
         token: credentialResponse.credential,
       });
       console.log('Google signup response:', response.data);

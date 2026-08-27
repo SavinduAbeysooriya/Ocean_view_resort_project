@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            await axios.post('http://localhost:8080/api/auth/forgot-password', { email });
+            await axios.post(`${API_URL}/auth/forgot-password`, { email });
             setStatus({ 
                 type: 'success', 
                 message: 'If an account exists with that email, a password reset link has been sent.' 

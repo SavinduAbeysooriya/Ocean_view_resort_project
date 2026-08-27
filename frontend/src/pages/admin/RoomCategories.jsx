@@ -9,6 +9,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminHeader from '../../components/admin/AdminHeader';
 import axios from 'axios';
+import { BASE_URL, API_URL as BASE_API_URL } from '../../config/api';
 
 const RoomCategories = () => {
   const { user, logout } = useAuth();
@@ -25,8 +26,7 @@ const RoomCategories = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const API_URL = 'http://localhost:8080/api/room-categories';
-  const BASE_URL = 'http://localhost:8080';
+  const API_URL = `${BASE_API_URL}/room-categories`;
 
   useEffect(() => {
     fetchCategories();

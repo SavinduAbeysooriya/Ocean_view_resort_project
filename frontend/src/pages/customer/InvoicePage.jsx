@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Printer, ArrowLeft, Download, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../utils/AuthContext';
+import { API_URL } from '../../config/api';
 
 const InvoicePage = () => {
     const { reservationId } = useParams();
@@ -18,32 +19,32 @@ const InvoicePage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchData();
+        fetchInvoiceData();
     }, [reservationId]);
 
-    const fetchData = async () => {
+    const fetchInvoiceData = async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             const headers = { Authorization: `Bearer ${token}` };
 
             // 1. Fetch Invoice
-            const invoiceRes = await axios.get(`http://localhost:8080/api/invoices/reservation/${reservationId}`);
+            const invoiceRes = await axios.get(`${API_URL}/invoices/reservation/${reservationId}`);
             setInvoice(invoiceRes.data);
 
             // 2. Fetch Reservation
-            const resRes = await axios.get(`http://localhost:8080/api/reservations/${reservationId}`, { headers });
+            const resRes = await axios.get(`${API_URL}/reservations/${reservationId}`, { headers });
             setReservation(resRes.data);
 
             // 3. Fetch Guest (linked to reservation)
             if (resRes.data.guestId) {
-                const guestRes = await axios.get(`http://localhost:8080/api/guests/${resRes.data.guestId}`, { headers });
+                const guestRes = await axios.get(`${API_URL}/guests/${resRes.data.guestId}`, { headers });
                 setGuest(guestRes.data);
             }
 
             // 4. Fetch Room
             if (resRes.data.roomId) {
-                const roomRes = await axios.get(`http://localhost:8080/api/rooms/${resRes.data.roomId}`);
+                const roomRes = await axios.get(`${API_URL}/rooms/${resRes.data.roomId}`);
                 setRoom(roomRes.data);
             }
 
