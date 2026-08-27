@@ -7,6 +7,7 @@ import {
   MapPin, Shield, Coffee, Wifi, Tv, Info, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../utils/AuthContext';
+import { BASE_URL, API_URL } from '../config/api';
 
 const RoomDetail = () => {
   const { id } = useParams();
@@ -26,9 +27,6 @@ const RoomDetail = () => {
   const [notes, setNotes] = useState('');
   const [availability, setAvailability] = useState({ checked: false, available: false, loading: false });
   const [error, setError] = useState('');
-  
-  const API_URL = 'http://localhost:8080/api';
-  const BASE_URL = 'http://localhost:8080';
 
   useEffect(() => {
     fetchRoomData();
@@ -339,7 +337,7 @@ const RoomDetail = () => {
 
           {/* Right Column: Booking Form */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-luxury-charcoal p-8 rounded-sm shadow-xl sticky top-24 border border-black/5 dark:border-white/5">
+            <div className="bg-green-100 dark:bg-luxury-charcoal p-8 rounded-sm shadow-xl sticky top-24 border border-black/5 dark:border-white/5">
               <h3 className="text-2xl font-serif mb-6 text-luxury-charcoal dark:text-white border-b border-black/5 dark:border-white/5 pb-4">
                 Book Your Stay
               </h3>

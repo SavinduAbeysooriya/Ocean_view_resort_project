@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../utils/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
+import { API_URL } from '../config/api';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -24,7 +25,7 @@ const Login = () => {
 
     try {
       console.log('Attempting login...', formData.email);
-      const response = await axios.post('http://localhost:8080/api/auth/login', formData);
+      const response = await axios.post(`${API_URL}/auth/login`, formData);
       console.log('Login response:', response.data);
       login(response.data, response.data.accessToken);
     } catch (err) {
@@ -43,7 +44,7 @@ const Login = () => {
     setError('');
     try {
       console.log('Attempting Google login...');
-      const response = await axios.post('http://localhost:8080/api/auth/google', {
+      const response = await axios.post(`${API_URL}/auth/google`, {
         token: credentialResponse.credential
       });
       console.log('Google login response:', response.data);

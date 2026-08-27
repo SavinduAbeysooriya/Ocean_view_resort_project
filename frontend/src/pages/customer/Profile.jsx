@@ -6,6 +6,7 @@ import { useAuth } from "../../utils/AuthContext";
 import axios from "axios";
 import PayHereButton from "../../components/PayHereButton";
 import { useNavigate, useLocation } from "react-router-dom";
+import { API_URL } from "../../config/api";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -46,7 +47,7 @@ const Profile = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/api/guests/me", {
+      const response = await axios.get(`${API_URL}/guests/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data) {
@@ -70,7 +71,7 @@ const Profile = () => {
       setFetchingReservations(true);
       const token = localStorage.getItem("token");
       if (!user?.id) return;
-      const response = await axios.get(`http://localhost:8080/api/reservations/user/${user.id}`, {
+      const response = await axios.get(`${API_URL}/reservations/user/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setReservations(response.data);
@@ -104,7 +105,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:8080/api/guests/me", formData, {
+      await axios.post(`${API_URL}/guests/me`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage({ type: "success", text: "Profile updated successfully!" });

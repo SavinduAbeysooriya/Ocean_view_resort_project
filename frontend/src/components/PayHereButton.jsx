@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 const PayHereButton = ({ reservation, onSuccess, onError }) => {
-  const API_URL = 'http://localhost:8080/api';
 
   const handlePayment = () => {
     const merchant_id = "1231474";
@@ -21,9 +21,9 @@ const PayHereButton = ({ reservation, onSuccess, onError }) => {
     const payment = {
       sandbox: true,
       merchant_id: merchant_id,
-      return_url: "http://localhost:5173/profile",
-      cancel_url: "http://localhost:5173/profile",
-      notify_url: "http://localhost:8080/api/payments/notify",
+      return_url: `${window.location.origin}/profile`,
+      cancel_url: `${window.location.origin}/profile`,
+      notify_url: `${API_URL}/payments/notify`,
       order_id: order_id,
       items: `Room Booking #${reservation.reservationNumber || reservation.id.substring(0, 8)}`,
       amount: amount,
