@@ -5,6 +5,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminHeader from "../../components/admin/AdminHeader";
 import { Edit2, Trash2, Plus, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_URL as BASE_API_URL } from "../../config/api";
 
 const AdminUsers = () => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ const AdminUsers = () => {
     role: "STAFF",
   });
 
-  const API_URL = "http://localhost:8080/api/users";
+  const API_URL = `${BASE_API_URL}/users`;
 
   useEffect(() => {
     fetchUsers();

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Hotel, Utensils, Umbrella, Users, ArrowRight, Star, Quote, ChevronLeft, ChevronRight, Phone, Mail, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { BASE_URL, API_URL } from '../config/api';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -12,9 +13,6 @@ const Home = () => {
     const [galleryImages, setGalleryImages] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [loading, setLoading] = useState(true);
-
-    const BASE_URL = 'http://localhost:8080';
-    const API_URL = 'http://localhost:8080/api';
 
     useEffect(() => {
         const fetchData = async () => {

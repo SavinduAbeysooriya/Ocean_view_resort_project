@@ -8,6 +8,7 @@ import {
   ChevronRight, Star, ArrowRight, Grid, List 
 } from 'lucide-react';
 import { cn } from "../utils/cn";
+import { BASE_URL, API_URL } from '../config/api';
 
 
 const Rooms = () => {
@@ -37,9 +38,6 @@ const Rooms = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 6;
-
-  const API_URL = 'http://localhost:8080/api';
-  const BASE_URL = 'http://localhost:8080';
 
   useEffect(() => {
     fetchData();

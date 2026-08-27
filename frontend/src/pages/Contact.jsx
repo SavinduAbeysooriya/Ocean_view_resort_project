@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { cn } from '../utils/cn';
 import contactHeader from '../assets/contact_header.jpg';
+import { API_URL } from '../config/api';
 
 const Contact = () => {
     const location = useLocation();
@@ -34,7 +35,7 @@ const Contact = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            await axios.post('http://localhost:8080/api/contact', formData);
+            await axios.post(`${API_URL}/contact`, formData);
             setStatus({ type: 'success', message: 'Your message has been sent successfully!' });
             setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {
